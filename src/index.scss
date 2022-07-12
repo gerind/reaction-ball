@@ -1,0 +1,27 @@
+
+:root {
+  cursor: default;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: 'Cormorant SC', serif;
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+:root, body {
+  height: 100%;
+  position: relative;
+  padding: 0;
+  margin: 0;
+  overflow-x: visible;
+  overflow-y: visible;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  font-size: 100px;
+  background-image: url('../public/minecraft_dirt.jpg');
+}
