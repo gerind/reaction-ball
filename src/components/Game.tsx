@@ -32,6 +32,8 @@ const Game: React.FC<IProps> = ({onFinish}) => {
 
     const {savedInterval: setInterval, savedTimeout: setTimeout} = useContext(GlobalContext)
 
+    const audioRef = useMemo(() => ({audio: null as unknown as HTMLAudioElement}), [])
+
     let [renderState, changeRender] = useState(0)
     const rerender = () => changeRender(++renderState)
 
@@ -79,11 +81,16 @@ const Game: React.FC<IProps> = ({onFinish}) => {
                         window.location.reload()
                         return
                     }
-                    gameData.gameToken = json[0] as string
-                    gameData.name = json[1] as string
-                    gameData.game = json.slice(2) as Array<Array<number>>
-                    changeStage('game')
-                    timeRef.current = Date.now()
+                    let audio = audioRef.audio = new Audio('/thebeginning.mp3')
+                    audio.oncanplaythrough = () => {
+                        audio.oncanplaythrough = null
+                        audio.play()
+                        gameData.gameToken = json[0] as string
+                        gameData.name = json[1] as string
+                        gameData.game = json.slice(2) as Array<Array<number>>
+                        changeStage('game')
+                        timeRef.current = Date.now()
+                    }
                 }), 1111)
         }
         else if (stage === 'game') {
@@ -98,6 +105,7 @@ const Game: React.FC<IProps> = ({onFinish}) => {
                 gameData.player.push([gameData.x, gameData.y])
                 if (checkFrameCollision(gameData.frame)) {
                     clearInterval(it)
+                    audioRef.audio.pause()
                     changeStage('finish')
                 }
                 rerender()
