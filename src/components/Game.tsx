@@ -34,6 +34,11 @@ const Game: React.FC<IProps> = ({onFinish}) => {
 
     const audioRef = useMemo(() => ({audio: null as unknown as HTMLAudioElement}), [])
 
+    const effects = useMemo(() => {
+        const s = localStorage.getItem('effects') || 'yes'
+        return s === 'yes'
+    }, [])
+
     let [renderState, changeRender] = useState(0)
     const rerender = () => changeRender(++renderState)
 
@@ -45,6 +50,39 @@ const Game: React.FC<IProps> = ({onFinish}) => {
             +(localStorage.getItem('mousey') ?? 350)
         ]
     }, [])
+
+    function getClose(num: number, closeto: number, add: number = 0) {
+        const s = 'CBA9876543210000000000000000000000000000000'
+        return s[Math.abs(num - closeto) + add]
+    }
+    function blickColor(frame: number) {
+        const d = frame % 60
+        if (d >= 59 && frame >= 800) {
+            return `#0F0C`
+        }
+        if (frame >= 3600) {
+            if ((d >= 0) && (d < 20))
+                return `#FF4${getClose(d, 10, 2)}`
+            if ((d >= 20) && (d < 40))
+                return `#66F${getClose(d, 30, 5)}`
+            if ((d >= 40) && (d < 60))
+                return `#F88${getClose(d, 50, 6)}`
+            return 'transparent'
+        }
+        if (frame >= 2400) {
+            if ((d >= 5) && (d < 25))
+                return `#FF4${getClose(d, 15, 2)}`
+            if ((d >= 30) && (d < 50))
+                return `#66F${getClose(d, 40, 5)}`
+            return 'transparent'
+        }
+        if (frame >= 1200) {
+            if ((d >= 5) && (d < 25))
+                return `#FF0${getClose(d, 15, 2)}`
+            return 'transparent'
+        }
+        return 'transparent'
+    }
 
     const dataRef = useRef<IGameData>({
         gameToken: '',
@@ -153,6 +191,11 @@ const Game: React.FC<IProps> = ({onFinish}) => {
             </IfComponent>
             <IfComponent condition={stage === 'game' || stage === 'finish'}>
                 <div className="game" onMouseMove={onMouseMove}>
+                    <IfComponent condition={effects}>
+                        <div className="blick" style={{
+                            background: blickColor(gameData.frame)
+                        }}></div>
+                    </IfComponent>
                     <div className="score">
                         Очки: {gameData.score}
                     </div>

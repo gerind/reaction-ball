@@ -67,7 +67,7 @@ function App() {
       }
     }
     const it = setInterval(() => {
-      for (let i = 0; i < 5; ++i) {
+      for (let i = 0; i < 25; ++i) {
         const [x, y] = coords[Math.floor(Math.random() * coords.length)]
         ctx.fillStyle = getRandomColor()
         ctx.fillRect(x, y, CANVAS_DX, CANVAS_DX)

@@ -13,6 +13,8 @@ const Menu: React.FC<IProps> = ({ onStart, top }) => {
 
     const [inputValue, changeInputValue] = useState(localStorage.getItem('name') || '')
 
+    const [effects, changeEffects] = useState<string>(localStorage.getItem('effects') || 'yes')
+
     function onInput(event: React.FormEvent<HTMLInputElement>) {
         const value = (event.target as HTMLInputElement).value
         if (/^[0-9a-zA-Z]{0,20}$/.test(value)) {
@@ -41,6 +43,11 @@ const Menu: React.FC<IProps> = ({ onStart, top }) => {
                     else
                         document.documentElement.requestFullscreen()
                 }}>Полноэкранный режим</div>
+                <div className="button" onClick={() => {
+                    const next = effects === 'yes' ? 'no' : 'yes'
+                    changeEffects(next)
+                    localStorage.setItem('effects', next)
+                }}>{effects === 'yes' ? 'Эффекты вкл.' : 'Эффекты выкл.'}</div>
             </div>
         </>
     )
