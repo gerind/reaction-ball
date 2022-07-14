@@ -33,6 +33,7 @@
             justify-content: space-between;
             padding-left: 16px;
             padding-right: 16px;
+            font-weight: bold;
             .index {
                 width: 10%;
             }
@@ -41,6 +42,16 @@
             }
             .score {
                 width: 20%;
+                color: blue;
+            }
+            &:first-child .name {
+                color: #F00;
+            }
+            &:nth-child(2) .name {
+                color: #F66;
+            }
+            &:nth-child(3) .name {
+                color: #FAA;
             }
         }
     }

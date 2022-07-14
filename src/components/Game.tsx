@@ -62,23 +62,23 @@ const Game: React.FC<IProps> = ({onFinish}) => {
         }
         if (frame >= 3600) {
             if ((d >= 0) && (d < 20))
-                return `#FF4${getClose(d, 10, 2)}`
+                return `#FF4${getClose(d, 10, 8)}`
             if ((d >= 20) && (d < 40))
-                return `#66F${getClose(d, 30, 5)}`
+                return `#66F${getClose(d, 30, 8)}`
             if ((d >= 40) && (d < 60))
-                return `#F88${getClose(d, 50, 6)}`
+                return `#F88${getClose(d, 50, 8)}`
             return 'transparent'
         }
         if (frame >= 2400) {
             if ((d >= 5) && (d < 25))
-                return `#FF4${getClose(d, 15, 2)}`
+                return `#FF4${getClose(d, 15, 8)}`
             if ((d >= 30) && (d < 50))
-                return `#66F${getClose(d, 40, 5)}`
+                return `#66F${getClose(d, 40, 8)}`
             return 'transparent'
         }
         if (frame >= 1200) {
             if ((d >= 5) && (d < 25))
-                return `#FF0${getClose(d, 15, 2)}`
+                return `#FF0${getClose(d, 15, 8)}`
             return 'transparent'
         }
         return 'transparent'
