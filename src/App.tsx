@@ -7,6 +7,25 @@ import Menu from './components/Menu'
 import { WIDTH, HEIGHT, CANVAS_DX } from './core/constants'
 import { usePreventSelectAndDrag } from './core/utils'
 
+const hextodec = {
+  '0': 0, '1': 1,
+  '2': 2, '3': 3,
+  '4': 4, '5': 5,
+  '6': 6, '7': 7,
+  '8': 8, '9': 9,
+  'a': 10, 'b': 11,
+  'c': 12, 'd': 13,
+  'e': 14, 'f': 15
+} as any
+
+function parseHex(hex: string): [number, number, number] {
+  return [
+    hextodec[hex[1]] * 16 + hextodec[hex[2]],
+    hextodec[hex[3]] * 16 + hextodec[hex[4]],
+    hextodec[hex[5]] * 16 + hextodec[hex[6]]
+  ]
+}
+
 export type ITop = Array<{
   name: string
   score: number
@@ -49,10 +68,18 @@ function App() {
 
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
+  const [mainColor, changeMainColor] = useState<string>(localStorage.getItem('maincolor') || '#84ff32')
+
   useEffect(() => {
+    const [r, g, b] = parseHex(mainColor)
     function getRandomColor() {
-      const r = 132, g = 255, b = 50
-      return `rgb(${r + Math.floor(Math.random() * 40) - 20},${g},${b + Math.floor(Math.random() * 40) - 20})`
+      let a = r + Math.floor(Math.random() * 40) - 20
+      let c = b + Math.floor(Math.random() * 40) - 20
+      a = Math.min(a, 255)
+      c = Math.min(c, 255)
+      a = Math.max(a, 0)
+      c = Math.max(c, 0)
+      return `rgb(${a},${g},${c})`
     }
     const canvas = canvasRef.current as HTMLCanvasElement
     canvas.width = WIDTH
@@ -67,14 +94,14 @@ function App() {
       }
     }
     const it = setInterval(() => {
-      for (let i = 0; i < 25; ++i) {
+      for (let i = 0; i < 20; ++i) {
         const [x, y] = coords[Math.floor(Math.random() * coords.length)]
         ctx.fillStyle = getRandomColor()
         ctx.fillRect(x, y, CANVAS_DX, CANVAS_DX)
       }
     }, 17)
     return () => clearInterval(it)
-  }, [])
+  }, [mainColor])
 
   const [mainState, changeMainState] = useState<'menu' | 'game'>('menu')
 
@@ -93,7 +120,10 @@ function App() {
     <div className="container" style={containerStyle} onMouseMove={onMouse} onClick={onMouse}>
       <canvas className="canvas" ref={canvasRef} />
       <IfComponent condition={mainState === 'menu'}>
-        <Menu onStart={onStart} top={top} />
+        <Menu onStart={onStart} top={top} onChangeColor={newColor => {
+          changeMainColor(newColor)
+          localStorage.setItem('maincolor', newColor)
+        }}/>
       </IfComponent>
       <IfComponent condition={mainState === 'game'}>
         <Game onFinish={(top: ITop) => {

@@ -1,13 +1,14 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { GlobalContext } from '..'
 import { ITop } from '../App'
 
 interface IProps {
     onStart: () => void
+    onChangeColor: (newColor: string) => void
     top: ITop
 }
 
-const Menu: React.FC<IProps> = ({ onStart, top }) => {
+const Menu: React.FC<IProps> = ({ onStart, onChangeColor, top }) => {
     
     const {savedInterval: setInterval, savedTimeout: setTimeout} = useContext(GlobalContext)
 
@@ -22,6 +23,9 @@ const Menu: React.FC<IProps> = ({ onStart, top }) => {
             localStorage.setItem('name', value.trim())
         }
     }
+
+    const colorRef = useRef<HTMLInputElement>(null)
+    const colorEl = colorRef.current!
 
     return (
         <>
@@ -48,6 +52,15 @@ const Menu: React.FC<IProps> = ({ onStart, top }) => {
                     changeEffects(next)
                     localStorage.setItem('effects', next)
                 }}>{effects === 'yes' ? 'Эффекты вкл.' : 'Эффекты выкл.'}</div>
+                <div className="button" onClick={() => {
+                    colorEl.click()
+                }}>
+                    <input className="color" type="color" value="#888888" ref={colorRef} onInput={event => {
+                        const target = event.target as HTMLInputElement
+                        onChangeColor(target.value)
+                    }}/>
+                    Цвет фона
+                </div>
             </div>
         </>
     )

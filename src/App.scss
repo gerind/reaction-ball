@@ -79,6 +79,7 @@
             }
         }
         .button {
+            cursor: pointer;
             background: white;
             width: 300px;
             height: 70px;
@@ -89,6 +90,11 @@
             justify-content: center;
             align-items: center;
             margin-top: 24px;
+            position: relative;
+            .color {
+                position: absolute;
+                opacity: 0;
+            }
             &:hover {
                 background: linear-gradient(to right, rgb(255, 210, 128), white, rgb(255, 210, 128));
                 padding-bottom: 4px;
