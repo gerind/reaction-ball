@@ -25,7 +25,6 @@ const Menu: React.FC<IProps> = ({ onStart, onChangeColor, top }) => {
     }
 
     const colorRef = useRef<HTMLInputElement>(null)
-    const colorEl = colorRef.current!
 
     return (
         <>
@@ -53,7 +52,7 @@ const Menu: React.FC<IProps> = ({ onStart, onChangeColor, top }) => {
                     localStorage.setItem('effects', next)
                 }}>{effects === 'yes' ? 'Эффекты вкл.' : 'Эффекты выкл.'}</div>
                 <div className="button" onClick={() => {
-                    colorEl.click()
+                    colorRef.current!.click()
                 }}>
                     <input className="color" type="color" value="#888888" ref={colorRef} onInput={event => {
                         const target = event.target as HTMLInputElement
