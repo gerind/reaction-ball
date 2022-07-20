@@ -29,6 +29,7 @@ const Menu: React.FC<IProps> = ({ onStart, onChangeColor, top }) => {
     return (
         <>
             <div className="left">
+                <div className="row">Общий рейтинг</div>
                 {
                     top.map(({name, score}, index) => <div className="row">
                         <span className="index">{index + 1}.</span>

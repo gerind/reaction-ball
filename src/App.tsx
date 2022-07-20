@@ -73,13 +73,16 @@ function App() {
   useEffect(() => {
     const [r, g, b] = parseHex(mainColor)
     function getRandomColor() {
-      let a = r + Math.floor(Math.random() * 40) - 20
-      let c = b + Math.floor(Math.random() * 40) - 20
+      let a = r + Math.floor(Math.random() * 20) - 10
+      let b = g + Math.floor(Math.random() * 20) - 10
+      let c = b + Math.floor(Math.random() * 20) - 10
       a = Math.min(a, 255)
+      b = Math.min(b, 255)
       c = Math.min(c, 255)
       a = Math.max(a, 0)
+      b = Math.max(b, 0)
       c = Math.max(c, 0)
-      return `rgb(${a},${g},${c})`
+      return `rgb(${a},${b},${c})`
     }
     const canvas = canvasRef.current as HTMLCanvasElement
     canvas.width = WIDTH
