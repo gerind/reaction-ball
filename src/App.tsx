@@ -1,49 +1,36 @@
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { GlobalContext } from '.'
 import './App.scss'
 import Game from './components/Game'
 import IfComponent from './components/IfComponent'
 import Menu from './components/Menu'
+import SongsPage from './components/SongsPage'
 import { WIDTH, HEIGHT, CANVAS_DX } from './core/constants'
+import { changeTopAction, IMainPage, IState, ITop } from './core/store'
 import { usePreventSelectAndDrag } from './core/utils'
-
-const hextodec = {
-  '0': 0, '1': 1,
-  '2': 2, '3': 3,
-  '4': 4, '5': 5,
-  '6': 6, '7': 7,
-  '8': 8, '9': 9,
-  'a': 10, 'b': 11,
-  'c': 12, 'd': 13,
-  'e': 14, 'f': 15
-} as any
 
 function parseHex(hex: string): [number, number, number] {
   return [
-    hextodec[hex[1]] * 16 + hextodec[hex[2]],
-    hextodec[hex[3]] * 16 + hextodec[hex[4]],
-    hextodec[hex[5]] * 16 + hextodec[hex[6]]
+    parseInt(hex.substring(1, 3), 16),
+    parseInt(hex.substring(3, 5), 16),
+    parseInt(hex.substring(5, 7), 16)
   ]
 }
 
-export type ITop = Array<{
-  name: string
-  score: number
-}>
-
 function App() {
-  
+
+  console.log('App render')
+
   const {savedInterval: setInterval, savedTimeout: setTimeout} = useContext(GlobalContext)
 
-  const [top, changeTop] = useState<ITop>([])
+  const dispatch = useDispatch()
 
   useEffect(() => {
     fetch('/top')
       .then(res => res.json())
-      .then((json: ITop) => {
-        changeTop(json)
-      })
-  }, [])
+      .then((top: ITop) => dispatch(changeTopAction(top)))
+  }, [dispatch])
 
   usePreventSelectAndDrag()
 
@@ -68,7 +55,7 @@ function App() {
 
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
-  const [mainColor, changeMainColor] = useState<string>(localStorage.getItem('maincolor') || '#84ff32')
+  const mainColor = useSelector<IState, string>(state => state.maincolor)
 
   useEffect(() => {
     const [r, g, b] = parseHex(mainColor)
@@ -106,33 +93,30 @@ function App() {
     return () => clearInterval(it)
   }, [mainColor])
 
-  const [mainState, changeMainState] = useState<'menu' | 'game'>('menu')
+  const mainPage = useSelector<IState, IMainPage>(state => state.mainPage)
 
-  function onStart() {
-    changeMainState('game')
-  }
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const mouseCoordsRef = useRef<[number, number]>([500, 500])
+
   function onMouse(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
-    const rect = (event.target as HTMLElement).closest('.container')!.getBoundingClientRect() as DOMRect
+    const rect = containerRef.current!.getBoundingClientRect() as DOMRect
     const x = Math.floor((event.clientX - rect.left) * WIDTH / rect.width)
     const y = Math.floor((event.clientY - rect.top) * HEIGHT / rect.height)
-    localStorage.setItem('mousex', x.toString())
-    localStorage.setItem('mousey', y.toString())
+    mouseCoordsRef.current = [x, y]
   }
 
   return (
-    <div className="container" style={containerStyle} onMouseMove={onMouse} onClick={onMouse}>
+    <div className="container" style={containerStyle} onMouseMove={onMouse} onClick={onMouse} ref={containerRef}>
       <canvas className="canvas" ref={canvasRef} />
-      <IfComponent condition={mainState === 'menu'}>
-        <Menu onStart={onStart} top={top} onChangeColor={newColor => {
-          changeMainColor(newColor)
-          localStorage.setItem('maincolor', newColor)
-        }}/>
+      <IfComponent condition={mainPage === 'menu'}>
+        <Menu />
       </IfComponent>
-      <IfComponent condition={mainState === 'game'}>
-        <Game onFinish={(top: ITop) => {
-          changeTop(top)
-          changeMainState('menu')
-        }} />
+      <IfComponent condition={mainPage === 'game'}>
+        <Game coordsRef={mouseCoordsRef}/>
+      </IfComponent>
+      <IfComponent condition={mainPage === 'songs'}>
+        <SongsPage />
       </IfComponent>
     </div>
   )

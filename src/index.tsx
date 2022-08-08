@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom/client'
 import './index.scss'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
+import { Provider } from 'react-redux'
+import store from './core/store'
 
 const savedInterval = window.setInterval
 const savedTimeout = window.setTimeout
@@ -18,11 +20,13 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 )
 root.render(
-  <GlobalContext.Provider value={{
-    savedInterval, savedTimeout
-  }}>
-    <App />
-  </GlobalContext.Provider>
+  <Provider store={store}>
+    <GlobalContext.Provider value={{
+      savedInterval, savedTimeout
+    }}>
+      <App />
+    </GlobalContext.Provider>
+  </Provider>
 )
 
 reportWebVitals()

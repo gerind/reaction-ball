@@ -1,27 +1,32 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef  } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { GlobalContext } from '..'
-import { ITop } from '../App'
+import { changeMainColorAction, changeMainPageAction, changeNameAction, IState, ITop, turnEffectsAction } from '../core/store'
 
-interface IProps {
-    onStart: () => void
-    onChangeColor: (newColor: string) => void
-    top: ITop
-}
-
-const Menu: React.FC<IProps> = ({ onStart, onChangeColor, top }) => {
+const Menu: React.FC = () => {
     
     const {savedInterval: setInterval, savedTimeout: setTimeout} = useContext(GlobalContext)
 
-    const [inputValue, changeInputValue] = useState(localStorage.getItem('name') || '')
+    const dispatch = useDispatch()
 
-    const [effects, changeEffects] = useState<string>(localStorage.getItem('effects') || 'yes')
+    const mainColor = useSelector<IState, string>(state => state.maincolor)
+    const name = useSelector<IState, string>(state => state.name)
+    const top = useSelector<IState, ITop>(state => state.top)
+    const effects = useSelector<IState, boolean>(state => state.effectsOn)
+
+    useEffect(() => {
+        localStorage.setItem('name', name)
+    }, [name])
+    useEffect(() => {
+        localStorage.setItem('maincolor', mainColor)
+    }, [mainColor])
+    useEffect(() => {
+        localStorage.setItem('effects', effects ? 'yes' : 'no')
+    }, [effects])
 
     function onInput(event: React.FormEvent<HTMLInputElement>) {
         const value = (event.target as HTMLInputElement).value
-        if (/^[0-9a-zA-Z]{0,20}$/.test(value)) {
-            changeInputValue(value.trim())
-            localStorage.setItem('name', value.trim())
-        }
+        dispatch(changeNameAction(value))
     }
 
     const colorRef = useRef<HTMLInputElement>(null)
@@ -39,8 +44,10 @@ const Menu: React.FC<IProps> = ({ onStart, onChangeColor, top }) => {
                 }
             </div>
             <div className="right">
-                <input value={inputValue} type="text" className="name" placeholder="Player" onInput={onInput} />
-                <div className="button" onClick={() => onStart()}>Играть</div>
+                <input value={name} type="text" className="name" placeholder="Player" onInput={onInput} />
+                <div className="button" onClick={() => {
+                    dispatch(changeMainPageAction('game'))
+                }}>Играть</div>
                 <div className="button" onClick={() => {
                     if (document.fullscreenElement === document.documentElement)
                         document.exitFullscreen()
@@ -48,22 +55,25 @@ const Menu: React.FC<IProps> = ({ onStart, onChangeColor, top }) => {
                         document.documentElement.requestFullscreen()
                 }}>Полноэкранный режим</div>
                 <div className="button" onClick={() => {
-                    const next = effects === 'yes' ? 'no' : 'yes'
-                    changeEffects(next)
-                    localStorage.setItem('effects', next)
-                }}>{effects === 'yes' ? 'Эффекты вкл.' : 'Эффекты выкл.'}</div>
+                    dispatch(turnEffectsAction())
+                }}>{effects ? 'Эффекты вкл.' : 'Эффекты выкл.'}</div>
                 <div className="button" onClick={() => {
                     colorRef.current!.click()
                 }}>
-                    <input className="color" type="color" value="#888888" ref={colorRef} onInput={event => {
+                    <input className="color" type="color" value={mainColor} ref={colorRef} onChange={event => {
                         const target = event.target as HTMLInputElement
-                        onChangeColor(target.value)
+                        dispatch(changeMainColorAction(target.value))
                     }}/>
                     Цвет фона
+                </div>
+                <div className="button" onClick={() => {
+                    dispatch(changeMainPageAction('songs'))
+                }}>
+                    Выбор песни
                 </div>
             </div>
         </>
     )
 }
 
-export default Menu
+export default React.memo(Menu)

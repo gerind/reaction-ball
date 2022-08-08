@@ -7,6 +7,39 @@
     position: absolute;
     top: 50%;
     left: 50%;
+    .button {
+        &.disabled {
+            cursor: default;
+            background: rgb(187, 255, 255);
+        }
+        cursor: pointer;
+        background: white;
+        width: 300px;
+        height: 70px;
+        border: 2px solid brown;
+        border-radius: 50px;
+        font-size: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        &:not(:first-child) {
+            margin-top: 24px;
+        }
+        .color {
+            position: absolute;
+            opacity: 0;
+        }
+        &:hover:not(.disabled) {
+            background: linear-gradient(to right, rgb(255, 210, 128), white, rgb(255, 210, 128));
+            padding-bottom: 4px;
+        }
+        &:active:not(.disabled) {
+            background: linear-gradient(to right, rgb(255, 128, 128), white, rgb(255, 128, 128));
+            padding-bottom: 0;
+            padding-top: 4px;
+        }
+    }
     .canvas {
         position: absolute;
         top: 0;
@@ -83,33 +116,6 @@
                 padding-bottom: 4px;
             }
         }
-        .button {
-            cursor: pointer;
-            background: white;
-            width: 300px;
-            height: 70px;
-            border: 2px solid brown;
-            border-radius: 50px;
-            font-size: 24px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 24px;
-            position: relative;
-            .color {
-                position: absolute;
-                opacity: 0;
-            }
-            &:hover {
-                background: linear-gradient(to right, rgb(255, 210, 128), white, rgb(255, 210, 128));
-                padding-bottom: 4px;
-            }
-            &:active {
-                background: linear-gradient(to right, rgb(255, 128, 128), white, rgb(255, 128, 128));
-                padding-bottom: 0;
-                padding-top: 4px;
-            }
-        }
     }
     .preload {
         position: absolute;
@@ -164,6 +170,37 @@
             top: 0;
             bottom: 0;
             background: transparent;
+        }
+    }
+    .songs {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 10px;
+        .song {
+            &:first-child {
+                background: transparent;
+                border: none;
+                justify-content: flex-end;
+            }
+            &:not(:first-child) {
+                margin-top: 10px;
+            }
+            background: rgba(255, 255, 255, 0.508);
+            box-sizing: border-box;
+            padding: 0 10px;
+            font-size: 26px;
+            font-weight: bold;
+            width: 100%;
+            height: 80px;
+            border: 1px solid rgb(53, 53, 53);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
     }
 }

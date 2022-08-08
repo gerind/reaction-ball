@@ -1,15 +1,11 @@
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { useDispatch, useStore } from 'react-redux'
 import { GlobalContext } from '..'
-import { ITop } from '../App'
-import { HEIGHT, RADIUS, WIDTH } from '../core/constants'
-import { checkCollision, isPointCloseToLine } from '../core/utils'
+import { changeMainPageAction, changeTopAction, IState } from '../core/store'
+import { checkCollision } from '../core/utils'
 import IfComponent from './IfComponent'
 
 type IType = Array<string | Array<number>>
-
-interface IBalls {
-    [key: number]: [number, number]
-}
 
 interface IGameData {
     gameToken: string
@@ -18,38 +14,33 @@ interface IGameData {
     player: Array<Array<number>>
     score: number
     frame: number
-    mousex: number
-    mousey: number
     x: number
     y: number
 }
 
 interface IProps {
-    onFinish: (top: ITop) => void
+    coordsRef: { current: [number, number] }
 }
 
-const Game: React.FC<IProps> = ({onFinish}) => {
+const Game: React.FC<IProps> = ({ coordsRef }) => {
+
+    console.log('Game render')
 
     const {savedInterval: setInterval, savedTimeout: setTimeout} = useContext(GlobalContext)
 
+    const store = useStore<IState>()
+    const dispatch = useDispatch()
+
     const audioRef = useMemo(() => ({audio: null as unknown as HTMLAudioElement}), [])
 
-    const effects = useMemo(() => {
-        const s = localStorage.getItem('effects') || 'yes'
-        return s === 'yes'
-    }, [])
+    const effects = store.getState().effectsOn
+    const songUrl = store.getState().songs.songs[store.getState().songs.choosen].url
+    const name = store.getState().name || 'Player'
 
     let [renderState, changeRender] = useState(0)
     const rerender = () => changeRender(++renderState)
 
     const [stage, changeStage] = useState<'preload' | 'game' | 'finish'>('preload')
-
-    const [initx, inity] = useMemo(() => {
-        return [
-            +(localStorage.getItem('mousex') ?? 900),
-            +(localStorage.getItem('mousey') ?? 350)
-        ]
-    }, [])
 
     function getClose(num: number, closeto: number, add: number = 0) {
         const s = 'CBA9876543210000000000000000000000000000000'
@@ -86,23 +77,15 @@ const Game: React.FC<IProps> = ({onFinish}) => {
 
     const dataRef = useRef<IGameData>({
         gameToken: '',
-        name: localStorage.getItem('name') || 'Player',
+        name,
         game: [[]],
-        player: [[initx, inity]],
+        player: [coordsRef.current],
         score: 0,
         frame: 0,
-        mousex: initx,
-        mousey: inity,
-        x: initx,
-        y: inity
+        x: coordsRef.current[0],
+        y: coordsRef.current[1]
     })
     const gameData = dataRef.current
-
-    function onMouseMove(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
-        const rect = (event.target as HTMLDivElement).closest('.game,.preload')!.getBoundingClientRect() as DOMRect
-        gameData.mousex = Math.floor((event.clientX - rect.left) * WIDTH / rect.width)
-        gameData.mousey = Math.floor((event.clientY - rect.top) * HEIGHT / rect.height)
-    }
 
     function checkFrameCollision(frame: number) {
         return checkCollision(gameData.game, gameData.player, gameData.frame)
@@ -119,7 +102,7 @@ const Game: React.FC<IProps> = ({onFinish}) => {
                         window.location.reload()
                         return
                     }
-                    let audio = audioRef.audio = new Audio('/thebeginning.mp3')
+                    let audio = audioRef.audio = new Audio(songUrl)
                     audio.oncanplaythrough = () => {
                         audio.oncanplaythrough = null
                         audio.play()
@@ -129,7 +112,7 @@ const Game: React.FC<IProps> = ({onFinish}) => {
                         changeStage('game')
                         timeRef.current = Date.now()
                     }
-                }), 1111)
+                }), 888)
         }
         else if (stage === 'game') {
             const it = setInterval(() => {
@@ -138,8 +121,8 @@ const Game: React.FC<IProps> = ({onFinish}) => {
                     gameData.score += 5
                     // console.log(`score: ${gameData.score + 5}, frame: ${gameData.frame + 1}, time: ${Date.now() - timeRef.current}`)
                 }
-                gameData.x = gameData.mousex
-                gameData.y = gameData.mousey
+                gameData.x = coordsRef.current[0]
+                gameData.y = coordsRef.current[1]
                 gameData.player.push([gameData.x, gameData.y])
                 if (checkFrameCollision(gameData.frame)) {
                     clearInterval(it)
@@ -165,12 +148,13 @@ const Game: React.FC<IProps> = ({onFinish}) => {
                 })
                 .then(res => res.json())
                 .then(json => {
-                    onFinish(json)
-                }), 2222)
+                    dispatch(changeTopAction(json))
+                    dispatch(changeMainPageAction('menu'))
+                }), 999)
         }
     }, [stage])
 
-    const balls = (() => {
+    const balls = useMemo(() => {
         const rez = []
         const frameData = gameData.game[gameData.frame]
         for (let i = 0; i < frameData.length; i += 3) {
@@ -180,17 +164,17 @@ const Game: React.FC<IProps> = ({onFinish}) => {
             }}></div>)
         }
         return rez
-    })()
+    }, [gameData.frame])
 
     return (
         <>
             <IfComponent condition={stage === 'preload'}>
-                <div className="preload" onMouseMove={onMouseMove}>
+                <div className="preload">
                     Загрузка...<br />Держите курсор в центре экрана
                 </div>
             </IfComponent>
             <IfComponent condition={stage === 'game' || stage === 'finish'}>
-                <div className="game" onMouseMove={onMouseMove}>
+                <div className="game">
                     <IfComponent condition={effects}>
                         <div className="blick" style={{
                             background: blickColor(gameData.frame)
@@ -215,4 +199,4 @@ const Game: React.FC<IProps> = ({onFinish}) => {
     )
 }
 
-export default Game
+export default React.memo(Game)
