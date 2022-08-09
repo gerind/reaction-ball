@@ -14,7 +14,7 @@ function getRandomDirectionDegrees(direction) {
 }
 
 function generateBall(side) {
-    const initialVector = [0.003, 0]
+    const initialVector = [0.0025, 0]
     switch (side) {
         case 0:
             return {
