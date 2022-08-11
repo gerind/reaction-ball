@@ -1,7 +1,10 @@
 import React, { useContext, useEffect, useRef  } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { GlobalContext } from '..'
-import { changeMainColorAction, changeMainPageAction, changeNameAction, IState, ITop, turnEffectsAction } from '../core/store'
+import { changeMainColorAction, changeMainPageAction, changeNameAction, clearLocalTopAction, IState, ITop, ITopType, toggleTopAction, turnEffectsAction } from '../core/store'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCoffee, faArrowRightArrowLeft, faTrashCan } from '@fortawesome/free-solid-svg-icons'
+import IfComponent from './IfComponent'
 
 const Menu: React.FC = () => {
     
@@ -12,7 +15,11 @@ const Menu: React.FC = () => {
     const mainColor = useSelector<IState, string>(state => state.maincolor)
     const name = useSelector<IState, string>(state => state.name)
     const top = useSelector<IState, ITop>(state => state.top)
+    const localtop = useSelector<IState, ITop>(state => state.localtop)
     const effects = useSelector<IState, boolean>(state => state.effectsOn)
+    const choosentoptype = useSelector<IState, ITopType>(state => state.choosentop)
+
+    const choosentop = choosentoptype === 'local' ? localtop : top
 
     useEffect(() => {
         localStorage.setItem('name', name)
@@ -34,9 +41,19 @@ const Menu: React.FC = () => {
     return (
         <>
             <div className="left">
-                <div className="row">Общий рейтинг</div>
+                <div className="row">
+                    <IfComponent condition={choosentoptype === 'local'}>
+                        <FontAwesomeIcon icon={faTrashCan} className={'clearlocal'} onClick={() => {
+                            dispatch(clearLocalTopAction())
+                        }} />
+                    </IfComponent>
+                    {choosentoptype === 'global' ? 'Общий рейтинг' : 'Локальный рейтинг'}
+                    <FontAwesomeIcon icon={faArrowRightArrowLeft} className="togglerating" onClick={() => {
+                        dispatch(toggleTopAction())
+                    }}/>
+                </div>
                 {
-                    top.map(({name, score}, index) => <div className="row">
+                    choosentop.map(({name, score}, index) => <div className="row">
                         <span className="index">{index + 1}.</span>
                         <span className="name">{name}</span>
                         <span className="score">{score}</span>

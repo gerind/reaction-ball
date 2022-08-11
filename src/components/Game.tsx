@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useStore } from 'react-redux'
 import { GlobalContext } from '..'
-import { changeMainPageAction, changeTopAction, IState } from '../core/store'
+import { changeMainPageAction, changeTopAction, IState, pushLocalTopAction } from '../core/store'
 import { checkCollision } from '../core/utils'
 import IfComponent from './IfComponent'
 
@@ -149,6 +149,7 @@ const Game: React.FC<IProps> = ({ coordsRef }) => {
                 .then(res => res.json())
                 .then(json => {
                     dispatch(changeTopAction(json))
+                    dispatch(pushLocalTopAction(gameData.name, gameData.score))
                     dispatch(changeMainPageAction('menu'))
                 }), 999)
         }

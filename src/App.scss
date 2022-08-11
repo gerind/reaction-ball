@@ -79,8 +79,26 @@
             }
             &:nth-child(1) {
                 justify-content: center;
-                cursor: pointer;
                 position: relative;
+                align-items: center;
+                .togglerating {
+                    cursor: pointer;
+                    position: absolute;
+                    right: 0;
+                    padding: 10px;
+                    &:hover {
+                        opacity: 0.6;
+                    }
+                }
+                .clearlocal {
+                    cursor: pointer;
+                    position: absolute;
+                    left: 0;
+                    padding: 10px;
+                    &:hover {
+                        opacity: 0.6;
+                    }
+                }
             }
             &:nth-child(2) .name {
                 color: #F00;

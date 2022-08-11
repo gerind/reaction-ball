@@ -9,9 +9,11 @@ const SongsPage: React.FC = () => {
   const songs = songsData.songs
   const choosen = songsData.choosen
 
-  function chooseSong(index: number) {
-    dispatch(chooseSongAction(index))
-    localStorage.setItem('choosen', index.toString())
+  function chooseSongFabric(index: number) {
+    return () => {
+      dispatch(chooseSongAction(index))
+      localStorage.setItem('choosen', index.toString())
+    }
   }
 
   return <div className="songs">
@@ -22,7 +24,7 @@ const SongsPage: React.FC = () => {
       songs.map(({url, name}, index) => {
         const disabled = choosen === index
         return <div className="song">
-          {index + 1}. {name} <div className={`button${disabled ? ' disabled' : ''}`} onClick={chooseSong.bind(null, index)}>
+          {index + 1}. {name} <div className={`button${disabled ? ' disabled' : ''}`} onClick={chooseSongFabric(index)}>
             {disabled ? 'Выбрано' : 'Выбрать'}
           </div>
         </div>

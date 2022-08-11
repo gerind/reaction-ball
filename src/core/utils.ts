@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { RADIUS } from './constants'
+import { ITop } from './store'
 
 export function preventDefault(event: Event) {
     event.preventDefault()
@@ -48,4 +49,14 @@ export function checkCollision(framesData: number[][], playerData: number[][], f
             return true
     }
     return false
+}
+
+export function getInitialLocalTop(): ITop {
+    let json = localStorage.getItem('localtop')
+    if (!json)
+        return new Array(10).fill(0).map(() => ({
+            name: '--------',
+            score: 0
+        }))
+    return JSON.parse(json)
 }
