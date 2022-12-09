@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { GlobalContext } from '.'
 import './App.scss'
 import Game from './components/Game'
-import IfComponent from './components/IfComponent'
+import If from './components/If'
 import Menu from './components/Menu'
 import SongsPage from './components/SongsPage'
 import { WIDTH, HEIGHT, CANVAS_DX } from './core/constants'
@@ -109,15 +109,15 @@ function App() {
   return (
     <div className="container" style={containerStyle} onMouseMove={onMouse} onClick={onMouse} ref={containerRef}>
       <canvas className="canvas" ref={canvasRef} />
-      <IfComponent condition={mainPage === 'menu'}>
+      <If condition={mainPage === 'menu'}>
         <Menu />
-      </IfComponent>
-      <IfComponent condition={mainPage === 'game'}>
+      </If>
+      <If condition={mainPage === 'game'}>
         <Game coordsRef={mouseCoordsRef}/>
-      </IfComponent>
-      <IfComponent condition={mainPage === 'songs'}>
+      </If>
+      <If condition={mainPage === 'songs'}>
         <SongsPage />
-      </IfComponent>
+      </If>
     </div>
   )
 }

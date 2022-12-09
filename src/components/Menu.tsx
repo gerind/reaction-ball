@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useRef  } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { GlobalContext } from '..'
-import { changeMainColorAction, changeMainPageAction, changeNameAction, clearLocalTopAction, IState, ITop, ITopType, toggleTopAction, turnEffectsAction } from '../core/store'
+import { changeMainColorAction, changeMainPageAction, changeNameAction, clearLocalTopAction, IState, ITop, ITopType, toggleTopAction } from '../core/store'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCoffee, faArrowRightArrowLeft, faTrashCan } from '@fortawesome/free-solid-svg-icons'
-import IfComponent from './IfComponent'
+import If from './If'
 
 const Menu: React.FC = () => {
     
@@ -16,7 +16,6 @@ const Menu: React.FC = () => {
     const name = useSelector<IState, string>(state => state.name)
     const top = useSelector<IState, ITop>(state => state.top)
     const localtop = useSelector<IState, ITop>(state => state.localtop)
-    const effects = useSelector<IState, boolean>(state => state.effectsOn)
     const choosentoptype = useSelector<IState, ITopType>(state => state.choosentop)
 
     const choosentop = choosentoptype === 'local' ? localtop : top
@@ -27,9 +26,6 @@ const Menu: React.FC = () => {
     useEffect(() => {
         localStorage.setItem('maincolor', mainColor)
     }, [mainColor])
-    useEffect(() => {
-        localStorage.setItem('effects', effects ? 'yes' : 'no')
-    }, [effects])
 
     function onInput(event: React.FormEvent<HTMLInputElement>) {
         const value = (event.target as HTMLInputElement).value
@@ -42,11 +38,11 @@ const Menu: React.FC = () => {
         <>
             <div className="left">
                 <div className="row">
-                    <IfComponent condition={choosentoptype === 'local'}>
+                    <If condition={choosentoptype === 'local'}>
                         <FontAwesomeIcon icon={faTrashCan} className={'clearlocal'} onClick={() => {
                             dispatch(clearLocalTopAction())
                         }} />
-                    </IfComponent>
+                    </If>
                     {choosentoptype === 'global' ? 'Общий рейтинг' : 'Локальный рейтинг'}
                     <FontAwesomeIcon icon={faArrowRightArrowLeft} className="togglerating" onClick={() => {
                         dispatch(toggleTopAction())
@@ -71,9 +67,6 @@ const Menu: React.FC = () => {
                     else
                         document.documentElement.requestFullscreen()
                 }}>Полноэкранный режим</div>
-                <div className="button" onClick={() => {
-                    dispatch(turnEffectsAction())
-                }}>{effects ? 'Эффекты вкл.' : 'Эффекты выкл.'}</div>
                 <div className="button" onClick={() => {
                     colorRef.current!.click()
                 }}>

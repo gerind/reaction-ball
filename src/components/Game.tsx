@@ -3,7 +3,7 @@ import { useDispatch, useStore } from 'react-redux'
 import { GlobalContext } from '..'
 import { changeMainPageAction, changeTopAction, IState, pushLocalTopAction } from '../core/store'
 import { checkCollision } from '../core/utils'
-import IfComponent from './IfComponent'
+import If from './If'
 
 type IType = Array<string | Array<number>>
 
@@ -32,8 +32,6 @@ const Game: React.FC<IProps> = ({ coordsRef }) => {
     const dispatch = useDispatch()
 
     const audioRef = useMemo(() => ({audio: null as unknown as HTMLAudioElement}), [])
-
-    const effects = store.getState().effectsOn
     const songUrl = store.getState().songs.songs[store.getState().songs.choosen].url
     const name = store.getState().name || 'Player'
 
@@ -41,39 +39,6 @@ const Game: React.FC<IProps> = ({ coordsRef }) => {
     const rerender = () => changeRender(++renderState)
 
     const [stage, changeStage] = useState<'preload' | 'game' | 'finish'>('preload')
-
-    function getClose(num: number, closeto: number, add: number = 0) {
-        const s = 'CBA9876543210000000000000000000000000000000'
-        return s[Math.abs(num - closeto) + add]
-    }
-    function blickColor(frame: number) {
-        const d = frame % 60
-        if (d >= 59 && frame >= 800) {
-            return `#0F0C`
-        }
-        if (frame >= 3600) {
-            if ((d >= 0) && (d < 20))
-                return `#FF4${getClose(d, 10, 8)}`
-            if ((d >= 20) && (d < 40))
-                return `#66F${getClose(d, 30, 8)}`
-            if ((d >= 40) && (d < 60))
-                return `#F88${getClose(d, 50, 8)}`
-            return 'transparent'
-        }
-        if (frame >= 2400) {
-            if ((d >= 5) && (d < 25))
-                return `#FF4${getClose(d, 15, 8)}`
-            if ((d >= 30) && (d < 50))
-                return `#66F${getClose(d, 40, 8)}`
-            return 'transparent'
-        }
-        if (frame >= 1200) {
-            if ((d >= 5) && (d < 25))
-                return `#FF0${getClose(d, 15, 8)}`
-            return 'transparent'
-        }
-        return 'transparent'
-    }
 
     const dataRef = useRef<IGameData>({
         gameToken: '',
@@ -169,18 +134,13 @@ const Game: React.FC<IProps> = ({ coordsRef }) => {
 
     return (
         <>
-            <IfComponent condition={stage === 'preload'}>
+            <If condition={stage === 'preload'}>
                 <div className="preload">
                     Загрузка...<br />Держите курсор в центре экрана
                 </div>
-            </IfComponent>
-            <IfComponent condition={stage === 'game' || stage === 'finish'}>
+            </If>
+            <If condition={stage === 'game' || stage === 'finish'}>
                 <div className="game">
-                    <IfComponent condition={effects}>
-                        <div className="blick" style={{
-                            background: blickColor(gameData.frame)
-                        }}></div>
-                    </IfComponent>
                     <div className="score">
                         Очки: {gameData.score}
                     </div>
@@ -189,13 +149,13 @@ const Game: React.FC<IProps> = ({ coordsRef }) => {
                         left: gameData.x,
                         top: gameData.y
                     }} />
-                    <IfComponent condition={stage === 'finish'}>
+                    <If condition={stage === 'finish'}>
                         <div className="preload">
                             Сохранение результата...<br />Набрано очков: {gameData.score}
                         </div>
-                    </IfComponent>
+                    </If>
                 </div>
-            </IfComponent>
+            </If>
         </>
     )
 }

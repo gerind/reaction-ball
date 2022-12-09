@@ -6,7 +6,6 @@ export const changeNameAction = createAction<string>('changename')
 export const changeTopAction = createAction<ITop>('changetop')
 export const changeMainColorAction = createAction<string>('changemaincolor')
 export const changeMainPageAction = createAction<IMainPage>('changemainstate')
-export const turnEffectsAction = createAction('turneffects')
 export const chooseSongAction = createAction<number>('choosesong')
 export const clearLocalTopAction = createAction('clearlocaltop')
 export const pushLocalTopAction = createAction('pushlocaltop', (name: string, score: number) => {
@@ -36,7 +35,6 @@ const initialState = {
     top: [] as ITop,
     maincolor: localStorage.getItem('maincolor') || '#84ff32',
     mainPage: 'menu' as IMainPage,
-    effectsOn: localStorage.getItem('effects') === 'yes',
     songs: getInitialSongs(),
     localtop: getInitialLocalTop(),
     choosentop: 'global' as ITopType
@@ -58,9 +56,6 @@ const store = configureStore({
         },
         [changeMainPageAction.type]: (state, action: PayloadAction<IMainPage>) => {
             state.mainPage = action.payload
-        },
-        [turnEffectsAction.type]: (state) => {
-            state.effectsOn = !state.effectsOn
         },
         [chooseSongAction.type]: (state, action: PayloadAction<number>) => {
             state.songs.choosen = action.payload

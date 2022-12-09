@@ -5,7 +5,7 @@ interface IProps {
     children: React.ReactElement
 }
 
-const IfComponent: React.FC<IProps> = ({condition, children}) => {
+const If: React.FC<IProps> = ({condition, children}) => {
     return (
         <>
             {
@@ -17,4 +17,4 @@ const IfComponent: React.FC<IProps> = ({condition, children}) => {
     )
 }
 
-export default IfComponent
+export default If
