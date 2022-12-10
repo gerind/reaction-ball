@@ -1,224 +1,224 @@
 
 .container {
-    width: 1366px;
-    height: 768px;
-    background: transparent;
-    font-size: 100px;
+  width: 1366px;
+  height: 768px;
+  background: transparent;
+  font-size: 100px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  .button {
+    &.disabled {
+      cursor: default;
+      background: rgb(187, 255, 255);
+    }
+    cursor: pointer;
+    background: white;
+    width: 300px;
+    height: 70px;
+    border: 2px solid brown;
+    border-radius: 50px;
+    font-size: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    &:not(:first-child) {
+      margin-top: 24px;
+    }
+    .color {
+      position: absolute;
+      opacity: 0;
+    }
+    &:hover:not(.disabled) {
+      background: linear-gradient(to right, rgb(255, 210, 128), white, rgb(255, 210, 128));
+      padding-bottom: 4px;
+    }
+    &:active:not(.disabled) {
+      background: linear-gradient(to right, rgb(255, 128, 128), white, rgb(255, 128, 128));
+      padding-bottom: 0;
+      padding-top: 4px;
+    }
+  }
+  .canvas {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    .button {
-        &.disabled {
-            cursor: default;
-            background: rgb(187, 255, 255);
-        }
-        cursor: pointer;
-        background: white;
-        width: 300px;
-        height: 70px;
-        border: 2px solid brown;
-        border-radius: 50px;
-        font-size: 24px;
-        display: flex;
+    top: 0;
+    left: 0;
+    z-index: -1;
+  }
+  .left {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    .row {
+      width: 70%;
+      height: 48px;
+      background: white;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-left: 16px;
+      padding-right: 16px;
+      font-weight: bold;
+      .index {
+        width: 10%;
+      }
+      .name {
+        width: 70%;
+      }
+      .score {
+        width: 20%;
+        color: blue;
+      }
+      &:nth-child(1) {
         justify-content: center;
-        align-items: center;
         position: relative;
-        &:not(:first-child) {
-            margin-top: 24px;
-        }
-        .color {
-            position: absolute;
-            opacity: 0;
-        }
-        &:hover:not(.disabled) {
-            background: linear-gradient(to right, rgb(255, 210, 128), white, rgb(255, 210, 128));
-            padding-bottom: 4px;
-        }
-        &:active:not(.disabled) {
-            background: linear-gradient(to right, rgb(255, 128, 128), white, rgb(255, 128, 128));
-            padding-bottom: 0;
-            padding-top: 4px;
-        }
-    }
-    .canvas {
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: -1;
-    }
-    .left {
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        width: 50%;
-        display: flex;
-        justify-content: center;
         align-items: center;
-        flex-direction: column;
-        .row {
-            width: 70%;
-            height: 48px;
-            background: white;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-left: 16px;
-            padding-right: 16px;
-            font-weight: bold;
-            .index {
-                width: 10%;
-            }
-            .name {
-                width: 70%;
-            }
-            .score {
-                width: 20%;
-                color: blue;
-            }
-            &:nth-child(1) {
-                justify-content: center;
-                position: relative;
-                align-items: center;
-                .togglerating {
-                    cursor: pointer;
-                    position: absolute;
-                    right: 0;
-                    padding: 10px;
-                    &:hover {
-                        opacity: 0.6;
-                    }
-                }
-                .clearlocal {
-                    cursor: pointer;
-                    position: absolute;
-                    left: 0;
-                    padding: 10px;
-                    &:hover {
-                        opacity: 0.6;
-                    }
-                }
-            }
-            &:nth-child(2) .name {
-                color: #F00;
-            }
-            &:nth-child(3) .name {
-                color: #F66;
-            }
-            &:nth-child(4) .name {
-                color: #FAA;
-            }
+        .togglerating {
+          cursor: pointer;
+          position: absolute;
+          right: 0;
+          padding: 10px;
+          &:hover {
+            opacity: 0.6;
+          }
         }
+        .clearlocal {
+          cursor: pointer;
+          position: absolute;
+          left: 0;
+          padding: 10px;
+          &:hover {
+            opacity: 0.6;
+          }
+        }
+      }
+      &:nth-child(2) .name {
+        color: #F00;
+      }
+      &:nth-child(3) .name {
+        color: #F66;
+      }
+      &:nth-child(4) .name {
+        color: #FAA;
+      }
     }
-    .right {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        width: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        .name {
-            background: white;
-            width: 300px;
-            height: 70px;
-            border: 2px solid brown;
-            border-radius: 50px;
-            font-size: 24px;
-            text-align: center;
-            &:hover {
-                background: linear-gradient(to right, orange, white, orange);
-                padding-bottom: 4px;
-            }
-        }
+  }
+  .right {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    .name {
+      background: white;
+      width: 300px;
+      height: 70px;
+      border: 2px solid brown;
+      border-radius: 50px;
+      font-size: 24px;
+      text-align: center;
+      &:hover {
+        background: linear-gradient(to right, orange, white, orange);
+        padding-bottom: 4px;
+      }
     }
-    .preload {
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        background: #FFF8;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-weight: bold;
-        font-size: 48px;
-        text-align: center;
+  }
+  .preload {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: #FFF8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 48px;
+    text-align: center;
+  }
+  .game {
+    cursor: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    .score {
+      position: absolute;
+      left: 12px;
+      top: 12px;
+      font-size: 48px;
+      color: black;
     }
-    .game {
-        cursor: none;
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        overflow-y: hidden;
-        overflow-x: hidden;
-        .score {
-            position: absolute;
-            left: 12px;
-            top: 12px;
-            font-size: 48px;
-            color: black;
-        }
-        .blue {
-            position: absolute;
-            background: radial-gradient(blue, 70%, black);
-            border-radius: 100%;
-            width: 16px;
-            height: 16px;
-            transform: translate(-50%, -50%);
-        }
-        .red {
-            position: absolute;
-            background: radial-gradient(red, 70%, black);
-            border-radius: 100%;
-            width: 16px;
-            height: 16px;
-            transform: translate(-50%, -50%);
-        }
-        .blick {
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            background: transparent;
-        }
+    .blue {
+      position: absolute;
+      background: radial-gradient(blue, 70%, black);
+      border-radius: 100%;
+      width: 16px;
+      height: 16px;
+      transform: translate(-50%, -50%);
     }
-    .songs {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        overflow-y: auto;
-        overflow-x: hidden;
-        padding: 10px;
-        .song {
-            &:first-child {
-                background: transparent;
-                border: none;
-                justify-content: flex-end;
-            }
-            &:not(:first-child) {
-                margin-top: 10px;
-            }
-            background: rgba(255, 255, 255, 0.508);
-            box-sizing: border-box;
-            padding: 0 10px;
-            font-size: 26px;
-            font-weight: bold;
-            width: 100%;
-            height: 80px;
-            border: 1px solid rgb(53, 53, 53);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    .red {
+      position: absolute;
+      background: radial-gradient(red, 70%, black);
+      border-radius: 100%;
+      width: 16px;
+      height: 16px;
+      transform: translate(-50%, -50%);
     }
+    .blick {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      background: transparent;
+    }
+  }
+  .songs {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 10px;
+    .song {
+      &:first-child {
+        background: transparent;
+        border: none;
+        justify-content: flex-end;
+      }
+      &:not(:first-child) {
+        margin-top: 10px;
+      }
+      background: rgba(255, 255, 255, 0.508);
+      box-sizing: border-box;
+      padding: 0 10px;
+      font-size: 26px;
+      font-weight: bold;
+      width: 100%;
+      height: 80px;
+      border: 1px solid rgb(53, 53, 53);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
 }
