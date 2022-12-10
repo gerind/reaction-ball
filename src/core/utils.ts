@@ -1,20 +1,8 @@
-import { useEffect } from 'react'
+import { ITop } from '../store/data.slice'
 import { RADIUS } from './constants'
-import { ITop } from './store'
 
 export function preventDefault(event: Event) {
     event.preventDefault()
-}
-
-export function usePreventSelectAndDrag() {
-    useEffect(() => {
-        document.addEventListener('dragstart', preventDefault)
-        document.addEventListener('selectstart', preventDefault)
-        return () => {
-            document.removeEventListener('dragstart', preventDefault)
-            document.removeEventListener('selectstart', preventDefault)
-        }
-    }, [])
 }
 
 //2S=v1*v2=ah

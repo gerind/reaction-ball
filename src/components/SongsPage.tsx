@@ -1,24 +1,24 @@
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { changeMainPageAction, chooseSongAction, ISongs, IState } from '../core/store'
+import { useActions } from '../hooks/actions'
+import { useDataSelector } from '../hooks/dataSelector'
 
 const SongsPage: React.FC = () => {
 
-  const dispatch = useDispatch()
-  const songsData = useSelector<IState, ISongs>(state => state.songs)
+  const { chooseSong, changeMainPage } = useActions()
+  const songsData = useDataSelector(data => data.songs)
   const songs = songsData.songs
   const choosen = songsData.choosen
 
   function chooseSongFabric(index: number) {
     return () => {
-      dispatch(chooseSongAction(index))
+      chooseSong(index)
       localStorage.setItem('choosen', index.toString())
     }
   }
 
   return <div className="songs">
     <div className="song">
-      <div className="button" onClick={() => dispatch(changeMainPageAction('menu'))}>Назад</div>
+      <div className="button" onClick={() => changeMainPage('menu')}>Назад</div>
     </div>
     {
       songs.map(({url, name}, index) => {

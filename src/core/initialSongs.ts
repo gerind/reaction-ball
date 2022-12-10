@@ -1,4 +1,14 @@
-import { ISongs } from './store'
+
+
+export interface ISong {
+  url: string
+  name: string
+}
+
+export type ISongs = {
+  songs: ISong[]
+  choosen: number
+}
 
 export function getInitialSongs(): ISongs {
   return {

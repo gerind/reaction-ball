@@ -4,7 +4,7 @@ import './index.scss'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
 import { Provider } from 'react-redux'
-import store from './core/store'
+import { store } from './store/store'
 
 const savedInterval = window.setInterval
 const savedTimeout = window.setTimeout

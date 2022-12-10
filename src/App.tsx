@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { GlobalContext } from '.'
 import './App.scss'
 import Game from './components/Game'
@@ -7,8 +6,10 @@ import If from './components/If'
 import Menu from './components/Menu'
 import SongsPage from './components/SongsPage'
 import { WIDTH, HEIGHT, CANVAS_DX } from './core/constants'
-import { changeTopAction, IMainPage, IState, ITop } from './core/store'
-import { usePreventSelectAndDrag } from './core/utils'
+import { useActions } from './hooks/actions'
+import { useDataSelector } from './hooks/dataSelector'
+import { usePreventSelectAndDrag } from './hooks/selectanddrag'
+import { ITop } from './store/data.slice'
 
 function parseHex(hex: string): [number, number, number] {
   return [
@@ -20,34 +21,32 @@ function parseHex(hex: string): [number, number, number] {
 
 function App() {
 
-  console.log('App render')
+  const {savedInterval: setInterval} = useContext(GlobalContext)
 
-  const {savedInterval: setInterval, savedTimeout: setTimeout} = useContext(GlobalContext)
-
-  const dispatch = useDispatch()
+  const { changeTop } = useActions()
 
   useEffect(() => {
     fetch('/top')
       .then(res => res.json())
-      .then((top: ITop) => dispatch(changeTopAction(top)))
-  }, [dispatch])
+      .then((top: ITop) => changeTop(top))
+  }, [changeTop])
 
   usePreventSelectAndDrag()
 
   const [scaleData, changeScaleData] = useState(Math.min(
-    window.innerWidth / WIDTH - 0.0001, window.innerHeight / HEIGHT - 0.0001
+    window.innerWidth / WIDTH, window.innerHeight / HEIGHT
   ).toFixed(4))
 
   useEffect(() => {
     const ti: number = setInterval(() => {
       const newData = Math.min(
-        window.innerWidth / WIDTH - 0.0001, window.innerHeight / HEIGHT - 0.0001
+        window.innerWidth / WIDTH, window.innerHeight / HEIGHT
       ).toFixed(4)
       if (newData !== scaleData)
         changeScaleData(newData)
     }, 128)
     return () => clearInterval(ti)
-  }, [scaleData])
+  }, [scaleData, setInterval])
 
   const containerStyle = useMemo(() => ({
     transform: `translate(-50%, -50%) scale(${scaleData})`
@@ -55,7 +54,7 @@ function App() {
 
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
-  const mainColor = useSelector<IState, string>(state => state.maincolor)
+  const mainColor = useDataSelector(data => data.maincolor)
 
   useEffect(() => {
     const [r, g, b] = parseHex(mainColor)
@@ -91,9 +90,9 @@ function App() {
       }
     }, 17)
     return () => clearInterval(it)
-  }, [mainColor])
+  }, [mainColor, setInterval])
 
-  const mainPage = useSelector<IState, IMainPage>(state => state.mainPage)
+  const mainPage = useDataSelector(data => data.mainPage)
 
   const containerRef = useRef<HTMLDivElement>(null)
 
