@@ -1,15 +1,15 @@
 import React from 'react'
 
 interface IProps {
-  condition: boolean
+  cond: boolean
   children: React.ReactElement
 }
 
-const If: React.FC<IProps> = ({condition, children}) => {
+const If: React.FC<IProps> = ({cond, children}) => {
   return (
     <>
       {
-        condition
+        cond
         ? children
         : <></>
       }

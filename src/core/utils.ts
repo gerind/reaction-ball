@@ -20,6 +20,7 @@ export function isPointCloseToLine(x: number, y: number, x0: number, y0: number,
   }
   return false
 }
+
 export function checkCollision(framesData: number[][], playerData: number[][], frame: number) {
   const preframeData = framesData[frame - 1]
   const preBalls: {[key: number]: [number, number]} = {}

@@ -17,13 +17,6 @@ const Menu: React.FC = () => {
 
   const choosentop = choosentoptype === 'local' ? localtop : top
 
-  useEffect(() => {
-    localStorage.setItem('name', name)
-  }, [name])
-  useEffect(() => {
-    localStorage.setItem('maincolor', mainColor)
-  }, [mainColor])
-
   function onInput(event: React.FormEvent<HTMLInputElement>) {
     const value = (event.target as HTMLInputElement).value
     changeName(value)
@@ -35,7 +28,7 @@ const Menu: React.FC = () => {
     <>
       <div className="left">
         <div className="row">
-          <If condition={choosentoptype === 'local'}>
+          <If cond={choosentoptype === 'local'}>
             <FontAwesomeIcon icon={faTrashCan} className={'clearlocal'} onClick={() => {
               clearLocalTop()
             }} />

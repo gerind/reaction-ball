@@ -21,7 +21,7 @@ function parseHex(hex: string): [number, number, number] {
 
 function App() {
 
-  const {savedInterval: setInterval} = useContext(GlobalContext)
+  const { savedInterval: setInterval } = useContext(GlobalContext)
 
   const { changeTop } = useActions()
 
@@ -95,7 +95,7 @@ function App() {
     return () => clearInterval(it)
   }, [mainColor, setInterval])
 
-  const mainPage = useDataSelector(data => data.mainPage)
+  const mainPage = useDataSelector(data => data.mainpage)
 
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -111,13 +111,13 @@ function App() {
   return (
     <div className="container" style={containerStyle} onMouseMove={onMouse} onClick={onMouse} ref={containerRef}>
       <canvas className="canvas" ref={canvasRef} />
-      <If condition={mainPage === 'menu'}>
+      <If cond={mainPage === 'menu'}>
         <Menu />
       </If>
-      <If condition={mainPage === 'game'}>
+      <If cond={mainPage === 'game'}>
         <Game coordsRef={mouseCoordsRef}/>
       </If>
-      <If condition={mainPage === 'songs'}>
+      <If cond={mainPage === 'songs'}>
         <SongsPage />
       </If>
     </div>

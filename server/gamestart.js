@@ -48,9 +48,7 @@ function gamestart(name, gamesData) {
       3. Запушить все шарики в массив curframe
     */
     Object.entries(balls).forEach(([id, ball]) => {
-      curframe.push(parseInt(id))
-      curframe.push(Math.floor(ball.x))
-      curframe.push(Math.floor(ball.y))
+      curframe.push(parseInt(id), Math.floor(ball.x), Math.floor(ball.y))
     })
 
     /*

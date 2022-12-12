@@ -13,7 +13,7 @@ interface IData {
   name: string,
   top: ITop,
   maincolor: string,
-  mainPage: IMainPage,
+  mainpage: IMainPage,
   songs: ISongs,
   localtop: ITop,
   choosentop: ITopType
@@ -23,7 +23,7 @@ const initialState: IData = {
   name: localStorage.getItem('name') || '',
   top: [],
   maincolor: localStorage.getItem('maincolor') || '#84ff32',
-  mainPage: 'menu',
+  mainpage: 'menu',
   songs: getInitialSongs(),
   localtop: getInitialLocalTop(),
   choosentop: 'global'
@@ -45,30 +45,19 @@ export const dataSlice = createSlice({
     },
     changeMainColor(state, action: PayloadAction<string>) {
       state.maincolor = action.payload
+      localStorage.setItem('maincolor', action.payload)
     },
     changeMainPage(state, action: PayloadAction<IMainPage>) {
-      state.mainPage = action.payload
+      state.mainpage = action.payload
     },
     chooseSong(state, action: PayloadAction<number>) {
       state.songs.choosen = action.payload
+      localStorage.setItem('choosen', action.payload.toString())
     },
     clearLocalTop(state) {
       localStorage.removeItem('localtop')
       state.localtop = getInitialLocalTop()
     },
-    // pushLocalTop(state, action: PayloadAction<{ name: string, score: number }>) {
-    //   let id = 10
-    //   while (id > 0 && state.localtop[id - 1].score < action.payload.score)
-    //     --id
-    //   if (id === 10)
-    //     return
-    //   for (let i = 9; i > id; --i)
-    //     state.localtop[i] = state.localtop[i - 1]
-    //   state.localtop[id] = {
-    //     name: action.payload.name, score: action.payload.score
-    //   }
-    //   localStorage.setItem('localtop', JSON.stringify(state.localtop))
-    // },
     pushLocalTop: {
       reducer(state, action: PayloadAction<{ name: string, score: number }>) {
           let id = 10

@@ -134,12 +134,12 @@ const Game: React.FC<IProps> = ({ coordsRef }) => {
 
   return (
     <>
-      <If condition={stage === 'preload'}>
+      <If cond={stage === 'preload'}>
         <div className="preload">
           Загрузка...<br />Держите курсор в центре экрана
         </div>
       </If>
-      <If condition={stage === 'game' || stage === 'finish'}>
+      <If cond={stage === 'game' || stage === 'finish'}>
         <div className="game">
           <div className="score">
             Очки: {gameData.score}
@@ -149,7 +149,7 @@ const Game: React.FC<IProps> = ({ coordsRef }) => {
             left: gameData.x,
             top: gameData.y
           }} />
-          <If condition={stage === 'finish'}>
+          <If cond={stage === 'finish'}>
             <div className="preload">
               Сохранение результата...<br />Набрано очков: {gameData.score}
             </div>

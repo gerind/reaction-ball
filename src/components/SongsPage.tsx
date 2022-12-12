@@ -9,12 +9,7 @@ const SongsPage: React.FC = () => {
   const songs = songsData.songs
   const choosen = songsData.choosen
 
-  function chooseSongFabric(index: number) {
-    return () => {
-      chooseSong(index)
-      localStorage.setItem('choosen', index.toString())
-    }
-  }
+  const chooseSongFabric = (index: number) => chooseSong.bind(null, index)
 
   return <div className="songs">
     <div className="song">
