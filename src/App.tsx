@@ -2,11 +2,12 @@ import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { GlobalContext } from '.'
 import './App.scss'
 import Game from './components/Game'
+import GamePreload from './components/GamePreload'
 import If from './components/If'
 import Menu from './components/Menu'
 import SongsPage from './components/SongsPage'
 import { WIDTH, HEIGHT, CANVAS_DX } from './core/constants'
-import { useActions } from './hooks/actions'
+import { useDataActions } from './hooks/actions'
 import { useDataSelector } from './hooks/dataSelector'
 import { usePreventSelectAndDrag } from './hooks/selectanddrag'
 import { useGetTopQuery } from './store/data.api'
@@ -23,7 +24,7 @@ function App() {
 
   const { savedInterval: setInterval } = useContext(GlobalContext)
 
-  const { changeTop } = useActions()
+  const { changeTop } = useDataActions()
 
   const {
     data: top,
@@ -57,7 +58,7 @@ function App() {
 
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
-  const mainColor = useDataSelector(data => data.maincolor)
+  const mainColor = useDataSelector(data => data.mainColor)
 
   useEffect(() => {
     const [r, g, b] = parseHex(mainColor)
@@ -95,7 +96,8 @@ function App() {
     return () => clearInterval(it)
   }, [mainColor, setInterval])
 
-  const mainPage = useDataSelector(data => data.mainpage)
+  const mainPage = useDataSelector(data => data.mainPage)
+  const gameStage = useDataSelector(data => data.gameStage)
 
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -114,7 +116,10 @@ function App() {
       <If cond={mainPage === 'menu'}>
         <Menu />
       </If>
-      <If cond={mainPage === 'game'}>
+      <If cond={gameStage === 'preload'}>
+        <GamePreload />
+      </If>
+      <If cond={gameStage === 'game' || gameStage === 'finish'}>
         <Game coordsRef={mouseCoordsRef}/>
       </If>
       <If cond={mainPage === 'songs'}>

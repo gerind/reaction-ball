@@ -1,10 +1,10 @@
 import React from 'react'
-import { useActions } from '../hooks/actions'
+import { useDataActions } from '../hooks/actions'
 import { useDataSelector } from '../hooks/dataSelector'
 
 const SongsPage: React.FC = () => {
 
-  const { chooseSong, changeMainPage } = useActions()
+  const { chooseSong, changeMainPage } = useDataActions()
   const songsData = useDataSelector(data => data.songs)
   const songs = songsData.songs
   const choosen = songsData.choosen

@@ -8,25 +8,30 @@ export type ITop = Array<{
 }>
 export type IMainPage = 'menu' | 'game' | 'songs'
 export type ITopType = 'local' | 'global'
+export type IGameStage = 'notstarted' | 'preload' | 'game' | 'finish'
 
 interface IData {
-  name: string,
-  top: ITop,
-  maincolor: string,
-  mainpage: IMainPage,
-  songs: ISongs,
-  localtop: ITop,
-  choosentop: ITopType
+  name: string
+  top: ITop
+  mainColor: string
+  mainPage: IMainPage
+  songs: ISongs
+  localTop: ITop
+  choosenTop: ITopType
+  audio: HTMLAudioElement | null
+  gameStage: IGameStage
 }
 
 const initialState: IData = {
   name: localStorage.getItem('name') || '',
   top: [],
-  maincolor: localStorage.getItem('maincolor') || '#84ff32',
-  mainpage: 'menu',
+  mainColor: localStorage.getItem('maincolor') || '#84ff32',
+  mainPage: 'menu',
   songs: getInitialSongs(),
-  localtop: getInitialLocalTop(),
-  choosentop: 'global'
+  localTop: getInitialLocalTop(),
+  choosenTop: 'global',
+  audio: null,
+  gameStage: 'notstarted'
 }
 
 export const dataSlice = createSlice({
@@ -44,11 +49,11 @@ export const dataSlice = createSlice({
       state.top = action.payload
     },
     changeMainColor(state, action: PayloadAction<string>) {
-      state.maincolor = action.payload
+      state.mainColor = action.payload
       localStorage.setItem('maincolor', action.payload)
     },
     changeMainPage(state, action: PayloadAction<IMainPage>) {
-      state.mainpage = action.payload
+      state.mainPage = action.payload
     },
     chooseSong(state, action: PayloadAction<number>) {
       state.songs.choosen = action.payload
@@ -56,21 +61,21 @@ export const dataSlice = createSlice({
     },
     clearLocalTop(state) {
       localStorage.removeItem('localtop')
-      state.localtop = getInitialLocalTop()
+      state.localTop = getInitialLocalTop()
     },
     pushLocalTop: {
       reducer(state, action: PayloadAction<{ name: string, score: number }>) {
           let id = 10
-          while (id > 0 && state.localtop[id - 1].score < action.payload.score)
+          while (id > 0 && state.localTop[id - 1].score < action.payload.score)
             --id
           if (id === 10)
             return
           for (let i = 9; i > id; --i)
-            state.localtop[i] = state.localtop[i - 1]
-          state.localtop[id] = {
+            state.localTop[i] = state.localTop[i - 1]
+          state.localTop[id] = {
             name: action.payload.name, score: action.payload.score
           }
-          localStorage.setItem('localtop', JSON.stringify(state.localtop))
+          localStorage.setItem('localtop', JSON.stringify(state.localTop))
         },
         prepare(name: string, score: number) {
           return {
@@ -81,11 +86,17 @@ export const dataSlice = createSlice({
         }
     },
     toggleTop(state) {
-      if (state.choosentop === 'local')
-        state.choosentop = 'global'
+      if (state.choosenTop === 'local')
+        state.choosenTop = 'global'
       else
-        state.choosentop = 'local'
-    }
+        state.choosenTop = 'local'
+    },
+    changeAudio(state, action: PayloadAction<HTMLAudioElement | null>) {
+      state.audio = action.payload as typeof state.audio
+    },
+    changeGameStage(state, action: PayloadAction<IGameStage>) {
+      state.gameStage = action.payload
+    },
   }
 })
 
