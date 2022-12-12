@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useRef, useReducer } from 'react'
 import { GlobalContext } from '..'
 import { checkCollision } from '../core/utils'
 import { useDataActions } from '../hooks/actions'
@@ -18,6 +18,8 @@ interface IProps {
   coordsRef: { current: [number, number] }
 }
 
+const renderReducer = (state: number) => state + 1
+
 const Game: React.FC<IProps> = ({ coordsRef }) => {
 
   const { savedInterval: setInterval, savedTimeout: setTimeout } = useContext(GlobalContext)
@@ -31,8 +33,7 @@ const Game: React.FC<IProps> = ({ coordsRef }) => {
   const frames = useGameSelector(game => game.frames)
   const gameStage = useDataSelector(data => data.gameStage)
 
-  let [renderState, changeRender] = useState(0)
-  const rerender = () => changeRender(++renderState)
+  const rerender = useReducer(renderReducer, 0)[1]
 
   const dataRef = useRef<IGameData>({
     player: [coordsRef.current],
