@@ -9,7 +9,7 @@ import { WIDTH, HEIGHT, CANVAS_DX } from './core/constants'
 import { useActions } from './hooks/actions'
 import { useDataSelector } from './hooks/dataSelector'
 import { usePreventSelectAndDrag } from './hooks/selectanddrag'
-import { ITop } from './store/data.slice'
+import { useGetTopQuery } from './store/data.api'
 
 function parseHex(hex: string): [number, number, number] {
   return [
@@ -25,11 +25,14 @@ function App() {
 
   const { changeTop } = useActions()
 
+  const {
+    data: top,
+  } = useGetTopQuery()
+
   useEffect(() => {
-    fetch('/top')
-      .then(res => res.json())
-      .then((top: ITop) => changeTop(top))
-  }, [changeTop])
+    if (Array.isArray(top))
+      changeTop(top)
+  }, [top, changeTop])
 
   usePreventSelectAndDrag()
 
@@ -38,7 +41,7 @@ function App() {
   ).toFixed(4))
 
   useEffect(() => {
-    const ti: number = setInterval(() => {
+    const ti = setInterval(() => {
       const newData = Math.min(
         window.innerWidth / WIDTH, window.innerHeight / HEIGHT
       ).toFixed(4)
