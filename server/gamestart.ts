@@ -1,24 +1,20 @@
-const { FPS, SECOND_GENERATE, STORE_TIME } = require('./constants')
-const { generateBall, isOutside } = require('./geometry')
-const { getRandomToken } = require('./utils')
+import { FPS, SECOND_GENERATE, STORE_TIME } from './constants'
+import { IBallConfig, IGamesData } from './models'
+import { getRandomToken } from './utils'
+import { generateBall, isOutside } from './geometry'
 
-function gamestart(name, gamesData) {
+export function gamestart(name: string, gamesData: IGamesData) {
   const FRAME_COUNT = FPS * SECOND_GENERATE
   const gameToken = getRandomToken()
-  const game = [gameToken, name, []]
+  const game: (string | number[])[] = [gameToken, name, []]
   let n = 0
-  const balls = {}
-  /*
-    balls = {
-      id: {
-        x: number
-        y: number
-        speedVector: [number, number]
-      }
-    }
-  */
+
+  const balls: {
+    [key: string]: IBallConfig
+  } = {}
+
   for (let frame = 1; frame <= FRAME_COUNT; ++frame) {
-    const curframe = []
+    const curframe: number[] = []
 
     /*
       0. Удалить шарики вышедшие за границу
@@ -38,7 +34,7 @@ function gamestart(name, gamesData) {
     /*
       2. создать новые шарики
     */
-    if ((frame % 15) === 0) {
+    if (frame % 15 === 0) {
       balls[n++] = generateBall(0)
       balls[n++] = generateBall(1)
       balls[n++] = generateBall(2)
@@ -58,14 +54,12 @@ function gamestart(name, gamesData) {
   }
 
   gamesData[gameToken] = {
-    data: game.slice(2),
+    data: game.slice(2) as number[][],
     timeout: setTimeout(() => {
       delete gamesData[gameToken]
     }, STORE_TIME),
-    name: name
+    name: name,
   }
 
   return game
 }
-
-module.exports = gamestart

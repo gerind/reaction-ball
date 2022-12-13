@@ -6,10 +6,16 @@ import { gameActionCreators } from '../store/game.slice'
 
 export const useDataActions = () => {
   const dispatch = useDispatch()
-  return useMemo(() => bindActionCreators(dataActionCreators, dispatch), [dispatch])
+  return useMemo(
+    () => bindActionCreators(dataActionCreators, dispatch),
+    [dispatch]
+  )
 }
 
 export const useGameActions = () => {
   const dispatch = useDispatch()
-  return useMemo(() => bindActionCreators(gameActionCreators, dispatch), [dispatch])
+  return useMemo(
+    () => bindActionCreators(gameActionCreators, dispatch),
+    [dispatch]
+  )
 }

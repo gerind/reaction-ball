@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useMemo, useRef, useReducer } from 'react'
+import React, {
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useReducer,
+} from 'react'
 import { GlobalContext } from '..'
 import { checkCollision } from '../core/utils'
 import { useDataActions } from '../hooks/actions'
@@ -21,10 +27,11 @@ interface IProps {
 const renderReducer = (state: number) => state + 1
 
 const Game: React.FC<IProps> = ({ coordsRef }) => {
+  const { savedInterval: setInterval, savedTimeout: setTimeout } =
+    useContext(GlobalContext)
 
-  const { savedInterval: setInterval, savedTimeout: setTimeout } = useContext(GlobalContext)
-
-  const { changeTop, pushLocalTop, changeMainPage, changeGameStage } = useDataActions()
+  const { changeTop, pushLocalTop, changeMainPage, changeGameStage } =
+    useDataActions()
 
   const audio = useDataSelector(data => data.audio)
   const name = useDataSelector(data => data.name || 'Player')
@@ -40,7 +47,7 @@ const Game: React.FC<IProps> = ({ coordsRef }) => {
     score: 0,
     frame: 0,
     x: coordsRef.current[0],
-    y: coordsRef.current[1]
+    y: coordsRef.current[1],
   })
   const gameData = dataRef.current
 
@@ -66,56 +73,68 @@ const Game: React.FC<IProps> = ({ coordsRef }) => {
         rerender()
       }, 17)
       return () => clearInterval(it)
-    }
-    else if (gameStage === 'finish') {
-      setTimeout(() => fetch('/confirm', {
-          method: 'POST',
-          mode: 'cors',
-          cache: 'no-cache',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            token: gameToken,
-            data: gameData.player
+    } else if (gameStage === 'finish') {
+      setTimeout(
+        () =>
+          fetch('/confirm', {
+            method: 'POST',
+            mode: 'cors',
+            cache: 'no-cache',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              token: gameToken,
+              data: gameData.player,
+            }),
           })
-        })
-        .then(res => res.json())
-        .then(json => {
-          changeTop(json)
-          pushLocalTop(name, gameData.score)
-          changeGameStage('notstarted')
-          changeMainPage('menu')
-        }), 999)
+            .then(res => res.json())
+            .then(json => {
+              changeTop(json)
+              pushLocalTop(name, gameData.score)
+              changeGameStage('notstarted')
+              changeMainPage('menu')
+            }),
+        999
+      )
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameStage])
 
   const balls = useMemo(() => {
     const rez = []
     const frameData = frames[gameData.frame]
     for (let i = 0; i < frameData.length; i += 3) {
-      rez.push(<div className="blue" key={frameData[i]} style={{
-        left: `${frameData[i + 1]}px`,
-        top: `${frameData[i + 2]}px`
-      }}></div>)
+      rez.push(
+        <div
+          className="blue"
+          key={frameData[i]}
+          style={{
+            left: `${frameData[i + 1]}px`,
+            top: `${frameData[i + 2]}px`,
+          }}
+        ></div>
+      )
     }
     return rez
   }, [gameData.frame, frames])
 
   return (
     <div className="game">
-      <div className="score">
-        Очки: {gameData.score}
-      </div>
+      <div className="score">Очки: {gameData.score}</div>
       {balls}
-      <div className="red" style={{
-        left: gameData.x,
-        top: gameData.y
-      }} />
+      <div
+        className="red"
+        style={{
+          left: gameData.x,
+          top: gameData.y,
+        }}
+      />
       <If cond={gameStage === 'finish'}>
         <div className="preload">
-          Сохранение результата...<br />Набрано очков: {gameData.score}
+          Сохранение результата...
+          <br />
+          Набрано очков: {gameData.score}
         </div>
       </If>
     </div>

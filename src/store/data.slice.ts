@@ -31,7 +31,7 @@ const initialState: IData = {
   localTop: getInitialLocalTop(),
   choosenTop: 'global',
   audio: null,
-  gameStage: 'notstarted'
+  gameStage: 'notstarted',
 }
 
 export const dataSlice = createSlice({
@@ -64,32 +64,30 @@ export const dataSlice = createSlice({
       state.localTop = getInitialLocalTop()
     },
     pushLocalTop: {
-      reducer(state, action: PayloadAction<{ name: string, score: number }>) {
-          let id = 10
-          while (id > 0 && state.localTop[id - 1].score < action.payload.score)
-            --id
-          if (id === 10)
-            return
-          for (let i = 9; i > id; --i)
-            state.localTop[i] = state.localTop[i - 1]
-          state.localTop[id] = {
-            name: action.payload.name, score: action.payload.score
-          }
-          localStorage.setItem('localtop', JSON.stringify(state.localTop))
-        },
-        prepare(name: string, score: number) {
-          return {
-            payload: {
-              name, score
-            }
-          }
+      reducer(state, action: PayloadAction<{ name: string; score: number }>) {
+        let id = 10
+        while (id > 0 && state.localTop[id - 1].score < action.payload.score)
+          --id
+        if (id === 10) return
+        for (let i = 9; i > id; --i) state.localTop[i] = state.localTop[i - 1]
+        state.localTop[id] = {
+          name: action.payload.name,
+          score: action.payload.score,
         }
+        localStorage.setItem('localtop', JSON.stringify(state.localTop))
+      },
+      prepare(name: string, score: number) {
+        return {
+          payload: {
+            name,
+            score,
+          },
+        }
+      },
     },
     toggleTop(state) {
-      if (state.choosenTop === 'local')
-        state.choosenTop = 'global'
-      else
-        state.choosenTop = 'local'
+      if (state.choosenTop === 'local') state.choosenTop = 'global'
+      else state.choosenTop = 'local'
     },
     changeAudio(state, action: PayloadAction<HTMLAudioElement | null>) {
       state.audio = action.payload as typeof state.audio
@@ -97,7 +95,7 @@ export const dataSlice = createSlice({
     changeGameStage(state, action: PayloadAction<IGameStage>) {
       state.gameStage = action.payload
     },
-  }
+  },
 })
 
 export const dataActionCreators = dataSlice.actions

@@ -10,20 +10,22 @@ const savedInterval = window.setInterval
 const savedTimeout = window.setTimeout
 
 export const GlobalContext = React.createContext<{
-  savedInterval: typeof savedInterval,
+  savedInterval: typeof savedInterval
   savedTimeout: typeof savedTimeout
 }>({
-  savedInterval, savedTimeout
+  savedInterval,
+  savedTimeout,
 })
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-)
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <Provider store={store}>
-    <GlobalContext.Provider value={{
-      savedInterval, savedTimeout
-    }}>
+    <GlobalContext.Provider
+      value={{
+        savedInterval,
+        savedTimeout,
+      }}
+    >
       <App />
     </GlobalContext.Provider>
   </Provider>

@@ -1,5 +1,3 @@
-
-
 export interface ISong {
   url: string
   name: string
@@ -15,17 +13,17 @@ export function getInitialSongs(): ISongs {
     songs: [
       {
         url: '/thebeginning.mp3',
-        name: 'ONE OK ROCK - The Beginning (Nighcore Edition)'
+        name: 'ONE OK ROCK - The Beginning (Nighcore Edition)',
       },
       {
         url: '/breakbeatbark.mp3',
-        name: 'Yuna (CV:Sayaka Kanda) - Break Beat Bark'
+        name: 'Yuna (CV:Sayaka Kanda) - Break Beat Bark',
       },
       {
         url: '/chittychittybangbang.mp3',
-        name: 'QUEENDOM - Chitty Chitty Bang Bang'
-      }
+        name: 'QUEENDOM - Chitty Chitty Bang Bang',
+      },
     ],
-    choosen: +(localStorage.getItem('choosen') || 0)
+    choosen: +(localStorage.getItem('choosen') || 0),
   }
 }

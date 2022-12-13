@@ -20,7 +20,7 @@ export const gameSlice = createSlice({
     changeFrames(state, action: PayloadAction<Array<Array<number>>>) {
       state.frames = action.payload
     },
-  }
+  },
 })
 
 export const gameActionCreators = gameSlice.actions

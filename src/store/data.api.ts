@@ -4,14 +4,13 @@ import { ITop } from './data.slice'
 export const dataApi = createApi({
   reducerPath: 'dataApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: `${window.location.origin}`
+    baseUrl: `${window.location.origin}`,
   }),
-  endpoints: (build) => ({
+  endpoints: build => ({
     getTop: build.query<ITop, void>({
-      query: () => 'top'
-    })
-  })
+      query: () => 'top',
+    }),
+  }),
 })
 
 export const { useGetTopQuery } = dataApi
-

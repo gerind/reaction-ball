@@ -16,45 +16,44 @@ function parseHex(hex: string): [number, number, number] {
   return [
     parseInt(hex.substring(1, 3), 16),
     parseInt(hex.substring(3, 5), 16),
-    parseInt(hex.substring(5, 7), 16)
+    parseInt(hex.substring(5, 7), 16),
   ]
 }
 
 function App() {
-
   const { savedInterval: setInterval } = useContext(GlobalContext)
 
   const { changeTop } = useDataActions()
 
-  const {
-    data: top,
-  } = useGetTopQuery()
+  const { data: top } = useGetTopQuery()
 
   useEffect(() => {
-    if (Array.isArray(top))
-      changeTop(top)
+    if (Array.isArray(top)) changeTop(top)
   }, [top, changeTop])
 
   usePreventSelectAndDrag()
 
-  const [scaleData, changeScaleData] = useState(Math.min(
-    window.innerWidth / WIDTH, window.innerHeight / HEIGHT
-  ).toFixed(4))
+  const [scaleData, changeScaleData] = useState(
+    Math.min(window.innerWidth / WIDTH, window.innerHeight / HEIGHT).toFixed(4)
+  )
 
   useEffect(() => {
     const ti = setInterval(() => {
       const newData = Math.min(
-        window.innerWidth / WIDTH, window.innerHeight / HEIGHT
+        window.innerWidth / WIDTH,
+        window.innerHeight / HEIGHT
       ).toFixed(4)
-      if (newData !== scaleData)
-        changeScaleData(newData)
+      if (newData !== scaleData) changeScaleData(newData)
     }, 128)
     return () => clearInterval(ti)
   }, [scaleData, setInterval])
 
-  const containerStyle = useMemo(() => ({
-    transform: `translate(-50%, -50%) scale(${scaleData})`
-  }), [scaleData])
+  const containerStyle = useMemo(
+    () => ({
+      transform: `translate(-50%, -50%) scale(${scaleData})`,
+    }),
+    [scaleData]
+  )
 
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
@@ -105,13 +104,19 @@ function App() {
 
   function onMouse(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     const rect = containerRef.current!.getBoundingClientRect() as DOMRect
-    const x = Math.floor((event.clientX - rect.left) * WIDTH / rect.width)
-    const y = Math.floor((event.clientY - rect.top) * HEIGHT / rect.height)
+    const x = Math.floor(((event.clientX - rect.left) * WIDTH) / rect.width)
+    const y = Math.floor(((event.clientY - rect.top) * HEIGHT) / rect.height)
     mouseCoordsRef.current = [x, y]
   }
 
   return (
-    <div className="container" style={containerStyle} onMouseMove={onMouse} onClick={onMouse} ref={containerRef}>
+    <div
+      className="container"
+      style={containerStyle}
+      onMouseMove={onMouse}
+      onClick={onMouse}
+      ref={containerRef}
+    >
       <canvas className="canvas" ref={canvasRef} />
       <If cond={mainPage === 'menu'}>
         <Menu />
@@ -120,7 +125,7 @@ function App() {
         <GamePreload />
       </If>
       <If cond={gameStage === 'game' || gameStage === 'finish'}>
-        <Game coordsRef={mouseCoordsRef}/>
+        <Game coordsRef={mouseCoordsRef} />
       </If>
       <If cond={mainPage === 'songs'}>
         <SongsPage />

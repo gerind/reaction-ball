@@ -5,16 +5,8 @@ interface IProps {
   children: React.ReactElement
 }
 
-const If: React.FC<IProps> = ({cond, children}) => {
-  return (
-    <>
-      {
-        cond
-        ? children
-        : <></>
-      }
-    </>
-  )
+const If: React.FC<IProps> = ({ cond, children }) => {
+  return <>{cond ? children : <></>}</>
 }
 
 export default If

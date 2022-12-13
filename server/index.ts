@@ -1,14 +1,14 @@
-
-const express = require('express')
-const gamestart = require('./gamestart')
-const { checkCollision } = require('./geometry')
-const { Top } = require('./Top')
+import express from 'express'
+import { IGamesData } from './models'
+import { Top } from './Top'
+import { gamestart } from './gamestart'
+import { checkCollision } from './geometry'
 
 const app = express()
 
 const port = 80
 
-const gamesData = {}
+const gamesData: IGamesData = {}
 const top = new Top()
 
 app.use(express.static('build'))
@@ -16,7 +16,7 @@ app.use(express.static('build'))
 app.use(express.json())
 
 app.get('/gamestart', (req, res) => {
-  let name = req.query.name
+  let name = req.query.name as string
   if (!/^[0-9a-zA-Z]{1,20}$/.test(name)) {
     name = 'Player'
   }
@@ -32,11 +32,11 @@ app.post('/confirm', (req, res) => {
   const player = req.body.data
   delete gamesData[token]
   clearTimeout(timeout)
-  let frame = 1, score = 0
-  while (frame + 1 < player.length && !checkCollision(data, player, frame)){
+  let frame = 1,
+    score = 0
+  while (frame + 1 < player.length && !checkCollision(data, player, frame)) {
     ++frame
-    if (frame % 3 === 0)
-      score += 5
+    if (frame % 3 === 0) score += 5
   }
   top.push(name, score)
   res.send(top.toJSON())

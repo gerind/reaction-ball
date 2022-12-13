@@ -1,13 +1,54 @@
-import { ITop } from '../store/data.slice'
-import { RADIUS } from './constants'
+import { IBallConfig, IVector } from './models'
 
-export function preventDefault(event: Event) {
-  event.preventDefault()
+import { WIDTH, HEIGHT, RADIUS } from './constants'
+
+const { random } = require('./utils')
+
+export function turnVector(vector: IVector, degrees: number): IVector {
+  const angle = (degrees / 180) * Math.PI
+  return [
+    vector[0] * Math.cos(angle) + vector[1] * Math.sin(angle),
+    -vector[0] * Math.sin(angle) + vector[1] * Math.cos(angle),
+  ]
 }
 
-//2S=v1*v2=ah
-//h=v1*v2/a
-//h < mindist <=> v1*v2/a<mindist <=> v1*v2<a*mindist
+export function getRandomDirectionDegrees(direction: number) {
+  return direction + random(181) - 90
+}
+
+export function generateBall(side: 0 | 1 | 2 | 3): IBallConfig {
+  const initialVector: IVector = [0.0025, 0]
+  switch (side) {
+    case 0:
+      return {
+        x: WIDTH - 1,
+        y: random(HEIGHT),
+        speedVector: turnVector(initialVector, getRandomDirectionDegrees(180)),
+      }
+    case 1:
+      return {
+        x: random(WIDTH),
+        y: 0,
+        speedVector: turnVector(initialVector, getRandomDirectionDegrees(270)),
+      }
+    case 2:
+      return {
+        x: 0,
+        y: random(HEIGHT),
+        speedVector: turnVector(initialVector, getRandomDirectionDegrees(0)),
+      }
+    case 3:
+      return {
+        x: random(WIDTH),
+        y: HEIGHT - 1,
+        speedVector: turnVector(initialVector, getRandomDirectionDegrees(90)),
+      }
+  }
+}
+
+export function isOutside(x: number, y: number) {
+  return x < 0 || y < 0 || x >= WIDTH || y >= HEIGHT
+}
 
 export function isPointCloseToLine(
   x: number,
@@ -39,7 +80,9 @@ export function checkCollision(
   frame: number
 ) {
   const preframeData = framesData[frame - 1]
-  const preBalls: { [key: number]: [number, number] } = {}
+  const preBalls: {
+    [key: string]: [number, number]
+  } = {}
   for (let i = 0; i < preframeData.length; i += 3) {
     preBalls[preframeData[i]] = [preframeData[i + 1], preframeData[i + 2]]
   }
@@ -69,14 +112,4 @@ export function checkCollision(
       return true
   }
   return false
-}
-
-export function getInitialLocalTop(): ITop {
-  let json = localStorage.getItem('localtop')
-  if (!json)
-    return new Array(10).fill(0).map(() => ({
-      name: '--------',
-      score: 0,
-    }))
-  return JSON.parse(json)
 }
