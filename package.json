@@ -29,6 +29,7 @@
   "scripts": {
     "server": "rimraf ./serverbuild && cd ./server && tsc && cd .. && node ./serverbuild/index",
     "prod": "npm run build && npm run server",
+    "prod:nobuild": "node ./serverbuild/index",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
