@@ -4,9 +4,9 @@ import {
   faArrowRightArrowLeft,
   faTrashCan,
 } from '@fortawesome/free-solid-svg-icons'
-import If from './If'
 import { useDataSelector } from '../hooks/dataSelector'
 import { useDataActions } from '../hooks/actions'
+import { classes } from '../core/utils'
 
 const Menu: React.FC = () => {
   const mainColor = useDataSelector(data => data.mainColor)
@@ -24,8 +24,6 @@ const Menu: React.FC = () => {
     changeGameStage,
   } = useDataActions()
 
-  const choosenTop = choosenTopType === 'local' ? localtop : top
-
   function onInput(event: React.FormEvent<HTMLInputElement>) {
     const value = (event.target as HTMLInputElement).value
     changeName(value)
@@ -35,18 +33,15 @@ const Menu: React.FC = () => {
 
   return (
     <>
-      <div className="left">
+      <div
+        className={classes({
+          left: true,
+          back: false,
+          active: choosenTopType === 'local',
+        })}
+      >
         <div className="row">
-          <If cond={choosenTopType === 'local'}>
-            <FontAwesomeIcon
-              icon={faTrashCan}
-              className={'clearlocal'}
-              onClick={() => {
-                clearLocalTop()
-              }}
-            />
-          </If>
-          {choosenTopType === 'global' ? 'Общий рейтинг' : 'Локальный рейтинг'}
+          Общий рейтинг
           <FontAwesomeIcon
             icon={faArrowRightArrowLeft}
             className="togglerating"
@@ -55,7 +50,39 @@ const Menu: React.FC = () => {
             }}
           />
         </div>
-        {choosenTop.map(({ name, score }, index) => (
+        {top.map(({ name, score }, index) => (
+          <div className="row">
+            <span className="index">{index + 1}.</span>
+            <span className="name">{name}</span>
+            <span className="score">{score}</span>
+          </div>
+        ))}
+      </div>
+      <div
+        className={classes({
+          left: true,
+          back: true,
+          active: choosenTopType === 'local',
+        })}
+      >
+        <div className="row">
+          <FontAwesomeIcon
+            icon={faTrashCan}
+            className={'clearlocal'}
+            onClick={() => {
+              clearLocalTop()
+            }}
+          />
+          Локальный рейтинг
+          <FontAwesomeIcon
+            icon={faArrowRightArrowLeft}
+            className="togglerating"
+            onClick={() => {
+              toggleTop()
+            }}
+          />
+        </div>
+        {localtop.map(({ name, score }, index) => (
           <div className="row">
             <span className="index">{index + 1}.</span>
             <span className="name">{name}</span>

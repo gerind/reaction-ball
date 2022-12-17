@@ -80,3 +80,11 @@ export function getInitialLocalTop(): ITop {
     }))
   return JSON.parse(json)
 }
+
+export function classes(classes: { [key: string]: boolean }): string {
+  let resultString = ''
+  Object.entries(classes).forEach(([className, needToInclude]) => {
+    if (needToInclude) resultString += className + ' '
+  })
+  return resultString
+}
