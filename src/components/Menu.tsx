@@ -13,7 +13,6 @@ const Menu: React.FC = () => {
   const name = useDataSelector(data => data.name)
   const top = useDataSelector(data => data.top)
   const localtop = useDataSelector(data => data.localTop)
-  const choosenTopType = useDataSelector(data => data.choosenTop)
 
   const {
     changeName,
@@ -31,18 +30,31 @@ const Menu: React.FC = () => {
 
   const colorRef = useRef<HTMLInputElement>(null)
 
-  const { frontStyles, backStyles } = useFlipCard(choosenTopType === 'local')
+  const {
+    frontStyles,
+    backStyles,
+    animationInProgress,
+    startAnimation,
+    onTransitionEnd,
+  } = useFlipCard()
 
   return (
     <>
-      <div className="left" style={frontStyles}>
+      <div
+        className="left"
+        style={frontStyles}
+        onTransitionEnd={onTransitionEnd}
+      >
         <div className="row">
           Общий рейтинг
           <FontAwesomeIcon
             icon={faArrowRightArrowLeft}
             className="togglerating"
             onClick={() => {
-              toggleTop()
+              if (!animationInProgress) {
+                toggleTop()
+                startAnimation()
+              }
             }}
           />
         </div>
@@ -68,7 +80,10 @@ const Menu: React.FC = () => {
             icon={faArrowRightArrowLeft}
             className="togglerating"
             onClick={() => {
-              toggleTop()
+              if (!animationInProgress) {
+                toggleTop()
+                startAnimation()
+              }
             }}
           />
         </div>
