@@ -6,7 +6,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { useDataSelector } from '../hooks/dataSelector'
 import { useDataActions } from '../hooks/actions'
-import { classes } from '../core/utils'
+import { useFlipCard } from '../hooks/flipCard'
 
 const Menu: React.FC = () => {
   const mainColor = useDataSelector(data => data.mainColor)
@@ -31,15 +31,11 @@ const Menu: React.FC = () => {
 
   const colorRef = useRef<HTMLInputElement>(null)
 
+  const { frontStyles, backStyles } = useFlipCard(choosenTopType === 'local')
+
   return (
     <>
-      <div
-        className={classes({
-          left: true,
-          back: false,
-          active: choosenTopType === 'local',
-        })}
-      >
+      <div className="left" style={frontStyles}>
         <div className="row">
           Общий рейтинг
           <FontAwesomeIcon
@@ -58,13 +54,7 @@ const Menu: React.FC = () => {
           </div>
         ))}
       </div>
-      <div
-        className={classes({
-          left: true,
-          back: true,
-          active: choosenTopType === 'local',
-        })}
-      >
+      <div className="left" style={backStyles}>
         <div className="row">
           <FontAwesomeIcon
             icon={faTrashCan}

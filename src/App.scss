@@ -67,18 +67,6 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    transition: transform 0.6s linear;
-    backface-visibility: hidden;
-    transform: perspective(1100px) rotateY(0deg);
-    &.active {
-      transform: perspective(1100px) rotateY(180deg);
-    }
-    &.back {
-      transform: perspective(1100px) rotateY(-180deg);
-      &.active {
-        transform: perspective(1100px) rotateY(0deg);
-      }
-    }
     .row {
       width: 70%;
       height: 48px;
