@@ -68,7 +68,7 @@ const Menu: React.FC = () => {
         <div className="row">
           <FontAwesomeIcon
             icon={faTrashCan}
-            className={'clearlocal'}
+            className="clearlocal"
             onClick={() => {
               clearLocalTop()
             }}

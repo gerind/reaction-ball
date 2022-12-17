@@ -1,4 +1,5 @@
 import React from 'react'
+import { classes } from '../core/utils'
 import { useDataActions } from '../hooks/actions'
 import { useDataSelector } from '../hooks/dataSelector'
 
@@ -23,7 +24,10 @@ const SongsPage: React.FC = () => {
           <div className="song">
             {index + 1}. {name}{' '}
             <div
-              className={`button${disabled ? ' disabled' : ''}`}
+              className={classes({
+                button: true,
+                disabled,
+              })}
               onClick={chooseSongFabric(index)}
             >
               {disabled ? 'Выбрано' : 'Выбрать'}
