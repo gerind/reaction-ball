@@ -10,9 +10,6 @@ export function useFlipCard() {
   const cancelAnimation = useCallback(() => {
     changeAnimationProgress(false)
   }, [])
-  const onTransitionEnd = useCallback(() => {
-    cancelAnimation()
-  }, [cancelAnimation])
   const frontStyles: React.CSSProperties = useMemo(() => {
     return {
       backfaceVisibility: 'hidden',
@@ -32,6 +29,6 @@ export function useFlipCard() {
     backStyles,
     animationInProgress,
     startAnimation,
-    onTransitionEnd,
+    onTransitionEnd: cancelAnimation,
   }
 }
