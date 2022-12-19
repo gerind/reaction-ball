@@ -13,15 +13,15 @@ export function useFlipCard() {
   const frontStyles: React.CSSProperties = useMemo(() => {
     return {
       backfaceVisibility: 'hidden',
-      transition: 'transform 0.6s linear',
-      transform: `perspective(1100px) rotateY(${deg}deg)`,
+      transition: 'transform 0.5s ease-out',
+      transform: `perspective(1100px) rotate3d(-1, 1, 0, ${deg}deg)`,
     }
   }, [deg])
   const backStyles: React.CSSProperties = useMemo(() => {
     return {
       backfaceVisibility: 'hidden',
-      transition: 'transform 0.6s linear',
-      transform: `perspective(1100px) rotateY(${deg - 180}deg)`,
+      transition: 'transform 0.5s ease-out',
+      transform: `perspective(1100px) rotate3d(-1, 1, 0, ${deg - 180}deg)`,
     }
   }, [deg])
   return {
